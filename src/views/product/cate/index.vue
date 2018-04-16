@@ -2,9 +2,9 @@
     <div class="app-container">
         <p style="border-bottom: 1px solid #000; padding: 10px;">商品分类列表</p>
         <div class="filter-container">
-            <el-button type="primary" plain class="filter-item" @click="addAdmin()">添加管理员</el-button>
+            <el-button type="primary" plain class="filter-item" @click="addCate()">添加分类</el-button>
             <div style="float: right">
-                <el-input placeholder="管理员用户名" style="width: 200px" class="filter-item" v-model="params.user_name"></el-input>
+                <el-input placeholder="分类名" style="width: 200px" class="filter-item" v-model="params.name"></el-input>
                 <el-button type="primary" class="filter-item" @click="search">搜索</el-button>
             </div>
         </div>
@@ -25,43 +25,27 @@
             </el-table-column>
             <el-table-column
                     align="center"
-                    label="管理员名称"
-                    prop="user_name"
+                    label="分类名"
+                    prop="name"
             >
             </el-table-column>
             <el-table-column
                     align="center"
-                    label="管理员真实姓名"
-                    prop="real_name"
-            >
-            </el-table-column>
-            <el-table-column
-                    align="center"
-                    label="管理员角色"
-                    prop="role.role_name"
-            >
-            </el-table-column>
-            <el-table-column
-                    align="center"
-                    label="最后登录IP"
-                    prop="last_login_ip"
-            >
-            </el-table-column>
-            <el-table-column
-                    align="center"
-                    label="最后登录时间"
-                    prop="last_login_time"
+                    label="上级分类"
+                    prop="pid.name"
             >
             </el-table-column>
             <el-table-column
                     align="center"
                     label="状态"
-                    width="80px"
+                    prop="status"
             >
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.status==1" type="success">正常</el-tag>
-                    <el-tag v-if="scope.row.status==0" type="danger">禁用</el-tag>
-                </template>
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    label="添加时间"
+                    prop="add_time"
+            >
             </el-table-column>
             <el-table-column
                     align="center"
@@ -85,11 +69,13 @@
                     :total="total">
             </el-pagination>
         </div>
+        <!--添加分类-->
+
     </div>
 </template>
 
 <script>
-    import {getAdminList, delAdmin} from '@/api/adminUser'
+    import {getCate} from '@/api/cate'
     import {mapMutations} from 'vuex'
     export default {
         name: "product-cate",
@@ -101,7 +87,7 @@
                 table_loading: true,
                 list: [],
                 params: {
-                    user_name: '',
+                    name: '',
                     pageSize: 10, //	每页显示条目个数
                     page: 1, //前页数
                 },
@@ -152,7 +138,7 @@
             },
             //获取数据
             _getData(){
-                getAdminList(this.params).then(res=>{
+                getCate(this.params).then(res=>{
                     this.list = res.data.data
                     this.total = res.data.total
                     this.pageSize = res.data.per_page
