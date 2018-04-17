@@ -75,6 +75,7 @@ export const constantRouterMap = [
         path: '/system',
         name: 'system',
         component: Layout,
+        alwaysShow: true,
         redirect: '/system/database',
         meta: {title: '系统管理', icon: 'system'},
         children: [
@@ -90,6 +91,7 @@ export const constantRouterMap = [
         path: '/product',
         name: 'product',
         component: Layout,
+        alwaysShow: true,
         meta: {title: '商品管理', icon: 'product'},
         children: [
             {

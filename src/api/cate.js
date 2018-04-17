@@ -9,14 +9,16 @@ export function getCate(params) {
 export function addCate(params) {
     return request({
         url: 'cate/addCate',
-        params: params
+        data: params,
+        method: 'post'
     })
 }
 
 export function editCate(params) {
     return request({
         url: 'cate/editCate',
-        params: params
+        data: params,
+        method:'post'
     })
 }
 
