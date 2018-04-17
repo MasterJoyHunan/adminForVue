@@ -17,6 +17,19 @@
                 :data="list"
         >
             <el-table-column
+                    type="expand"
+            >
+                <template slot-scope="scope">
+                    <div>
+                        <el-tag>商品属性1 :</el-tag>
+                        <el-button class="button-new-tag" size="small" @click="showInput">+ 添加新属性</el-button>
+                    </div>
+                    <div style="margin-top: 5px">
+                        <el-tag>商品属性2 :</el-tag>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="ID"
                     prop="id"
                     align="center"
@@ -29,9 +42,7 @@
                     width="240px"
             >
                 <template slot-scope="scope">
-                    <template v-if="scope.row.edit">
-                        <el-input class="edit-input" size="small" v-model="scope.row.name"></el-input>
-                    </template>
+                    <el-input v-if="scope.row.edit" class="edit-input" size="small" v-model="scope.row.name"></el-input>
                     <span v-else>{{scope.row.name}}</span>
                 </template>
             </el-table-column>
@@ -41,9 +52,8 @@
                     width="100px"
             >
                 <template slot-scope="scope">
-                    <template v-if="scope.row.edit">
-                        <el-input class="edit-input" size="small" type="number" v-model="scope.row.sort"></el-input>
-                    </template>
+                    <el-input v-if="scope.row.edit" class="edit-input" size="small" type="number"
+                              v-model.number="scope.row.sort"></el-input>
                     <span v-else>{{scope.row.sort}}</span>
                 </template>
             </el-table-column>
@@ -100,7 +110,7 @@
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
-                    <el-input v-model="form.sort" type="number"></el-input>
+                    <el-input v-model.number="form.sort" type="number"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <div style="float: right">
@@ -142,7 +152,7 @@
                     ],
                     sort: [
                         {required: true, message: '请输入排序', trigger: 'blur'},
-                        // {type: "number", message: '必须是数字', trigger: 'blur'}
+                        {type: "number", message: '必须是数字', trigger: 'blur'}
                     ]
                 }
             }
