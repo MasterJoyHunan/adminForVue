@@ -21,11 +21,49 @@
             >
                 <template slot-scope="scope">
                     <div>
-                        <el-tag>商品属性1 :</el-tag>
-                        <el-button class="button-new-tag" size="small" @click="showInput">+ 添加新属性</el-button>
+                        <el-tag type="success">商品属性1 :</el-tag>
+                        <el-tag
+                                v-if="scope.row.attr1_data"
+                                v-for="(item, index) in scope.row.attr1_data"
+                                :key="index"
+                                closable
+                                @close="deleteAttr(scope.row, index, 1)"
+                        >{{item}}</el-tag>
+                        <el-input
+                                class="input-new-tag"
+                                v-if="scope.row.attr1.new_attr"
+                                size="small"
+                                @keyup.enter.native="handleInputConfirm(scope.row, 1)"
+                                @blur="scope.row.attr1.new_attr = false"
+                                v-model="inputValue"
+                                ref="inputEle"
+                                placeholder="回车添加"
+                        >
+                        </el-input>
+                        <el-button v-else class="button-new-tag" size="small" @click="addAttr(scope.row, 1)">+ 添加新属性</el-button>
                     </div>
+                    <p style="border-bottom: solid #ebeef5 1px"></p>
                     <div style="margin-top: 5px">
-                        <el-tag>商品属性2 :</el-tag>
+                        <el-tag type="success">商品属性2 :</el-tag>
+                        <el-tag
+                                v-if="scope.row.attr2_data"
+                                v-for="(item, index) in scope.row.attr2_data"
+                                :key="index"
+                                closable
+                                @close="deleteAttr(scope.row, index, 2)"
+                        >{{item}}</el-tag>
+                        <el-input
+                                class="input-new-tag"
+                                v-if="scope.row.attr2.new_attr"
+                                size="small"
+                                @keyup.enter.native="handleInputConfirm(scope.row, 2)"
+                                @blur="scope.row.attr2.new_attr = false"
+                                v-model="inputValue"
+                                ref="inputEle"
+                                placeholder="回车添加"
+                        >
+                        </el-input>
+                        <el-button v-else class="button-new-tag" size="small" @click="addAttr(scope.row, 2)">+ 添加新属性</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -154,7 +192,8 @@
                         {required: true, message: '请输入排序', trigger: 'blur'},
                         {type: "number", message: '必须是数字', trigger: 'blur'}
                     ]
-                }
+                },
+                inputValue: '',
             }
         },
 
@@ -199,6 +238,7 @@
                 row.name = row.old_name
                 row.sort = row.old_sort
             },
+
             //删除分类
             handleDel(index, row) {
                 this.$confirm('是否确定删除该分类', '警告', {
@@ -214,6 +254,39 @@
                         this.list.splice(index, 1)
                     })
                 })
+            },
+
+            //添加新的属性
+            addAttr(row, attr){
+                if(attr == 1){
+                    row.attr1.new_attr = true
+                }else{
+                    row.attr2.new_attr = true
+                }
+                this.$nextTick(()=>{
+                    this.$refs.inputEle.$refs.input.focus()
+                })
+                this.inputValue = ''
+            },
+
+            //添加新的属性
+            handleInputConfirm(row, attr){
+                if(attr == 1){
+                    row.attr1_data.push(this.inputValue)
+                    row.attr1.new_attr = false
+                }else{
+                    row.attr2_data.push(this.inputValue)
+                    row.attr2.new_attr = false
+                }
+
+            },
+            //删除属性
+            deleteAttr(row, index, attr){
+                if(attr == 1){
+                    row.attr1_data.splice(index, 1)
+                }else{
+                    row.attr2_data.splice(index, 1)
+                }
             },
 
             //搜索
@@ -236,6 +309,18 @@
                         this.$set(item, 'edit', false)
                         item.old_name = item.name
                         item.old_sort = item.sort
+                        if(item.attr1){
+                            this.$set(item.attr1, 'new_attr', false)
+                        }else{
+                            this.$set(item, 'attr1', {new_attr: false})
+                        }
+                        !item.attr1_data ? this.$set(item, 'attr1_data', []) : ''
+                        if(item.attr2){
+                            this.$set(item.attr2, 'new_attr', false)
+                        }else{
+                            this.$set(item, 'attr2', {new_attr: false})
+                        }
+                        !item.attr2_data ? this.$set(item, 'attr2_data', []) : ''
                         return item
                     })
                     this.total = res.data.total
@@ -252,13 +337,25 @@
 </script>
 
 <style scoped>
+    .el-tag + .el-tag {
+        margin-left: 10px;
+    }
     .search-container {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
     }
 
     .page-container {
         float: right;
         margin: 20px;
+    }
+    .button-new-tag{
+        margin-left: 10px;
+    }
+    .input-new-tag {
+        width: 90px;
+        margin-left: 10px;
+        vertical-align: bottom;
     }
 
 </style>
