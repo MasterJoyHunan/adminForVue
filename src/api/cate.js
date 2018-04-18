@@ -28,3 +28,17 @@ export function delCate(params) {
         params: params
     })
 }
+
+export function addCateAttr(params) {
+    return request({
+        url: 'cate/addCateSku',
+        params: params
+    })
+}
+
+export function delCateAttr(params) {
+    return request({
+        url: 'cate/delCateSku',
+        params: params
+    })
+}

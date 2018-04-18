@@ -100,6 +100,12 @@ export const constantRouterMap = [
                 component: () => import('@/views/product/cate/index'),
                 meta: {title: '商品分类'},
             },
+            {
+                path: 'goods',
+                name: 'product-goods',
+                component: () => import('@/views/product/pro/index'),
+                meta: {title: '商品管理'},
+            },
         ]
     },
     {path: '*', redirect: '/404', hidden: true}

@@ -23,47 +23,51 @@
                     <div>
                         <el-tag type="success">商品属性1 :</el-tag>
                         <el-tag
-                                v-if="scope.row.attr1_data"
-                                v-for="(item, index) in scope.row.attr1_data"
+                                v-if="scope.row.attr1"
+                                v-for="(item, index) in scope.row.attr1"
                                 :key="index"
                                 closable
-                                @close="deleteAttr(scope.row, index, 1)"
-                        >{{item}}</el-tag>
+                                @close="deleteAttr(scope.row, item.id, index, 1)"
+                        >{{item.name}}
+                        </el-tag>
                         <el-input
                                 class="input-new-tag"
-                                v-if="scope.row.attr1.new_attr"
+                                v-if="scope.row.new_attr1"
                                 size="small"
                                 @keyup.enter.native="handleInputConfirm(scope.row, 1)"
-                                @blur="scope.row.attr1.new_attr = false"
+                                @blur="scope.row.new_attr1 = false"
                                 v-model="inputValue"
                                 ref="inputEle"
                                 placeholder="回车添加"
                         >
                         </el-input>
-                        <el-button v-else class="button-new-tag" size="small" @click="addAttr(scope.row, 1)">+ 添加新属性</el-button>
+                        <el-button v-else class="button-new-tag" size="small" @click="addAttr(scope.row, 1)">+ 添加新属性
+                        </el-button>
                     </div>
                     <p style="border-bottom: solid #ebeef5 1px"></p>
                     <div style="margin-top: 5px">
                         <el-tag type="success">商品属性2 :</el-tag>
                         <el-tag
-                                v-if="scope.row.attr2_data"
-                                v-for="(item, index) in scope.row.attr2_data"
+                                v-if="scope.row.attr2"
+                                v-for="(item, index) in scope.row.attr2"
                                 :key="index"
                                 closable
-                                @close="deleteAttr(scope.row, index, 2)"
-                        >{{item}}</el-tag>
+                                @close="deleteAttr(scope.row, item.id, index, 2)"
+                        >{{item.name}}
+                        </el-tag>
                         <el-input
                                 class="input-new-tag"
-                                v-if="scope.row.attr2.new_attr"
+                                v-if="scope.row.new_attr2"
                                 size="small"
                                 @keyup.enter.native="handleInputConfirm(scope.row, 2)"
-                                @blur="scope.row.attr2.new_attr = false"
+                                @blur="scope.row.new_attr2 = false"
                                 v-model="inputValue"
                                 ref="inputEle"
                                 placeholder="回车添加"
                         >
                         </el-input>
-                        <el-button v-else class="button-new-tag" size="small" @click="addAttr(scope.row, 2)">+ 添加新属性</el-button>
+                        <el-button v-else class="button-new-tag" size="small" @click="addAttr(scope.row, 2)">+ 添加新属性
+                        </el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -161,7 +165,7 @@
 </template>
 
 <script>
-    import {getCate, addCate, editCate, delCate} from '@/api/cate'
+    import {getCate, addCate, editCate, delCate, addCateAttr, delCateAttr} from '@/api/cate'
 
     export default {
         name: "product-cate",
@@ -257,40 +261,39 @@
             },
 
             //添加新的属性
-            addAttr(row, attr){
-                if(attr == 1){
-                    row.attr1.new_attr = true
-                }else{
-                    row.attr2.new_attr = true
-                }
-                this.$nextTick(()=>{
+            addAttr(row, attr) {
+                attr == 1 ? row.new_attr1 = true : row.new_attr2 = true
+                this.$nextTick(() => {
                     this.$refs.inputEle.$refs.input.focus()
                 })
                 this.inputValue = ''
             },
 
-            //添加新的属性
-            handleInputConfirm(row, attr){
-                if(attr == 1){
-                    row.attr1_data.push(this.inputValue)
-                    row.attr1.new_attr = false
-                }else{
-                    row.attr2_data.push(this.inputValue)
-                    row.attr2.new_attr = false
-                }
+            //添加新的属性提交
+            handleInputConfirm(row, attr) {
+                let data = {pid: row.id, level: attr, name: this.inputValue}
+                addCateAttr(data).then(res => {
+                    if (attr == 1) {
+                        row.attr1.push(res.data)
+                        row.new_attr1 = false
+                    } else {
+                        row.attr2.push(res.data)
+                        row.new_attr2 = false
+                    }
+                })
 
             },
             //删除属性
-            deleteAttr(row, index, attr){
-                if(attr == 1){
-                    row.attr1_data.splice(index, 1)
-                }else{
-                    row.attr2_data.splice(index, 1)
-                }
+            deleteAttr(row, id, index, attr) {
+                console.log(id)
+                delCateAttr({id: id}).then(res => {
+                    attr == 1 ? row.attr1.splice(index, 1) : row.attr2.splice(index, 1)
+                })
             },
 
             //搜索
             search() {
+                this.table_loading = true
                 this._getData()
             },
             //修改每页显示多少条数据
@@ -307,20 +310,19 @@
                 getCate(this.params).then(res => {
                     this.list = res.data.data.map(item => {
                         this.$set(item, 'edit', false)
+                        this.$set(item, 'new_attr1', false)
+                        this.$set(item, 'new_attr2', false)
+                        let attr1 = []
+                        let attr2 = []
+                        if (item.sku.length > 0) {
+                            item.sku.forEach(sku => {
+                                sku.level == 1 ? attr1.push(sku) : attr2.push(sku)
+                            })
+                        }
+                        item.attr1 = attr1
+                        item.attr2 = attr2
                         item.old_name = item.name
                         item.old_sort = item.sort
-                        if(item.attr1){
-                            this.$set(item.attr1, 'new_attr', false)
-                        }else{
-                            this.$set(item, 'attr1', {new_attr: false})
-                        }
-                        !item.attr1_data ? this.$set(item, 'attr1_data', []) : ''
-                        if(item.attr2){
-                            this.$set(item.attr2, 'new_attr', false)
-                        }else{
-                            this.$set(item, 'attr2', {new_attr: false})
-                        }
-                        !item.attr2_data ? this.$set(item, 'attr2_data', []) : ''
                         return item
                     })
                     this.total = res.data.total
@@ -340,6 +342,7 @@
     .el-tag + .el-tag {
         margin-left: 10px;
     }
+
     .search-container {
         margin-bottom: 5px;
         margin-top: 5px;
@@ -349,9 +352,11 @@
         float: right;
         margin: 20px;
     }
-    .button-new-tag{
+
+    .button-new-tag {
         margin-left: 10px;
     }
+
     .input-new-tag {
         width: 90px;
         margin-left: 10px;
