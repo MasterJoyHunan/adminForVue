@@ -285,7 +285,6 @@
             },
             //删除属性
             deleteAttr(row, id, index, attr) {
-                console.log(id)
                 delCateAttr({id: id}).then(res => {
                     attr == 1 ? row.attr1.splice(index, 1) : row.attr2.splice(index, 1)
                 })

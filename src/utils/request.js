@@ -32,7 +32,6 @@ service.interceptors.response.use(
                 type: 'error',
                 duration: 5 * 1000
             })
-            console.log(location.href)
             if (location.href.indexOf('/login') === -1) {
                 //不在登录界面就报错
                 if (res.status == 404 || res.status == 304) { //被挤掉线

@@ -1,28 +1,61 @@
 <template>
-    <div class="app-container createPost-container">
-        <MDinput :maxlength="16">标题</MDinput>
-        <span class="word-counter">16字</span>
+    <div class="app-container">
+        <el-form class="form-container" status-icon :rules="formRules" ref="fromInput" :model="formValue"
+                 @submit.native.prevent>
+            <el-form-item prop="title">
+                <MDinput :maxlength="16" v-model="formValue.title">标题</MDinput>
+            </el-form-item>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="选择分类">
+                        <el-select v-model="formValue.cate">
+                            <el-option>xxxx</el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="市场价" prop="market_price">
+                        <el-input v-model="formValue.market_price"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="售价" prop="price">
+                        <el-input v-model="formValue.price"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
     </div>
 </template>
 
 <script>
     import MDinput from '@/components/MDinput'
+
     export default {
         name: "addPro",
-        components : {
+        data() {
+            return {
+                formValue: {
+                    title: '',
+                    cate: '',
+                    market_price: 0,
+                    price: 0,
+                },
+                formRules: {
+                    title: [],
+                    cate: [],
+                    market_price: [],
+                    price: [],
+                },
+            }
+        },
+        components: {
             MDinput
         },
     }
 </script>
 
-<style lang="scss" scoped>
-    .createPost-container{
-        position: relative;
-        .word-counter {
-            width: 40px;
-            position: absolute;
-            right: -10px;
-            top: 0px;
-        }
-    }
+<style lang="sass" scoped>
+    .form-container
+        padding: 10px 50px
 </style>
