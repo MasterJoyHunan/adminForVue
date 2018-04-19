@@ -146,10 +146,9 @@
                     })
                 })
             },
-            //跳转到添加用户
-            addAdmin(flag){
-                this.$router.push('/admin/addAdmin/')
-                this.setEditAdmin({})
+            //跳转到添加商品
+            addGoods(){
+                this.$router.push('/product/addgoods')
             },
             //搜索
             search(){

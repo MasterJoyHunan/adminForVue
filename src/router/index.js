@@ -106,6 +106,20 @@ export const constantRouterMap = [
                 component: () => import('@/views/product/pro/index'),
                 meta: {title: '商品管理'},
             },
+            {
+                path: 'addgoods',
+                name: 'product-addgoods',
+                component: () => import('@/views/product/pro/addPro'),
+                meta: {title: '商品添加'},
+                hidden: true
+            },
+            {
+                path: 'editgoods',
+                name: 'product-editgoods',
+                component: () => import('@/views/product/pro/editPro'),
+                meta: {title: '商品修改'},
+                hidden: true
+            },
         ]
     },
     {path: '*', redirect: '/404', hidden: true}
