@@ -1,8 +1,8 @@
 <template>
     <div class="app-container">
-        <el-form class="form-container" status-icon :rules="formRules" ref="fromInput" :model="formValue"
+        <!-- <el-form class="form-container" status-icon :rules="formRules" ref="fromInput" :model="formValue"
                  @submit.native.prevent>
-            <el-form-item prop="title">
+            <el-form-item >
                 <MDinput :maxlength="16" v-model="formValue.title">标题</MDinput>
             </el-form-item>
             <el-row>
@@ -14,17 +14,17 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="市场价" prop="market_price">
+                    <el-form-item label="市场价">
                         <el-input v-model="formValue.market_price"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="售价" prop="price">
+                    <el-form-item label="售价" >
                         <el-input v-model="formValue.price"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
-        </el-form>
+        </el-form> -->
     </div>
 </template>
 
@@ -32,7 +32,7 @@
     import MDinput from '@/components/MDinput'
 
     export default {
-        name: "addPro",
+        /* name: "addPro",
         data() {
             return {
                 formValue: {
@@ -51,7 +51,7 @@
         },
         components: {
             MDinput
-        },
+        }, */
     }
 </script>
 

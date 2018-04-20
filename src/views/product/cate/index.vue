@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <p style="border-bottom: 1px solid #000; padding: 10px;">商品分类列表</p>
+        <!-- <p style="border-bottom: 1px solid #000; padding: 10px;">商品分类列表</p>
         <div class="filter-container">
             <el-button type="primary" plain class="filter-item" @click="addCate()">添加分类</el-button>
             <div style="float: right">
@@ -138,7 +138,6 @@
                     :total="total">
             </el-pagination>
         </div>
-        <!--添加分类-->
         <el-dialog
                 :visible.sync="showDialog"
                 title="添加分类" width="30%"
@@ -160,7 +159,7 @@
                     </div>
                 </el-form-item>
             </el-form>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -168,7 +167,7 @@
     import {getCate, addCate, editCate, delCate, addCateAttr, delCateAttr} from '@/api/cate'
 
     export default {
-        name: "product-cate",
+        /* name: "product-cate",
         created() {
             this._getData()
         },
@@ -332,7 +331,7 @@
                     this.table_loading = true
                 })
             },
-        },
+        }, */
 
     }
 </script>

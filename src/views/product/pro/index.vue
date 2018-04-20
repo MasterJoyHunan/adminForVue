@@ -1,5 +1,6 @@
 <template>
-    <div class="app-container">
+<div></div>
+   <!--  <div class="app-container">
         <p style="border-bottom: 1px solid #000; padding: 10px;">商品列表</p>
         <div class="filter-container">
             <el-button type="primary" plain class="filter-item" @click="addGoods()">添加商品</el-button>
@@ -99,7 +100,7 @@
                     :total="total">
             </el-pagination>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script>
