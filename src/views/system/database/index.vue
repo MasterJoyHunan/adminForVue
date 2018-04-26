@@ -47,106 +47,106 @@
 </template>
 
 <script>
-    import {getList, back, init, restore, del} from '@/api/database'
-    export default {
-        name: "database",
-        created(){
-            this._getData()
-        },
-        data(){
-            return {
-                table_loading: true,
-                list: [],
-            }
-        },
+import { getList, back, init, restore, del } from '@/api/database'
+export default {
+    name: "database",
+    created () {
+        this._getData()
+    },
+    data () {
+        return {
+            table_loading: true,
+            list: [],
+        }
+    },
 
-        methods: {
-            //备份数据库
-            backSql(){
-                this.$confirm('是否备份数据库', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    back().then(res=>{
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        })
-                        this._getData()
+    methods: {
+        //备份数据库
+        backSql () {
+            this.$confirm('是否备份数据库', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                back().then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
                     })
+                    this._getData()
                 })
-            },
-            //初始化数据库
-            initSql(){
-                this.$confirm('系统将恢复初始状态,不可恢复', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    init().then(res=>{
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        })
-                    })
-                })
-            },
-            //下载
-            download(item){
-                location.href='http://localhost/web/public/vueapi/data/download?filename='+item.title
-            },
-            //还原
-            restore(item){
-                this.$confirm('系统将继续还原操作,不可恢复', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    restore(item).then(res=>{
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        })
-                    })
-                })
-            },
-            //删除数据库文件
-            deleteSql(index, item){
-                this.$confirm('该数据库将进行删除,不可恢复', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    del(item).then(res=>{
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        })
-                        this.list.splice(index, 1)
-                    })
-                })
-            },
-            //获取数据
-            _getData(){
-                getList().then(res=>{
-                    this.list = res.data
-                    this.table_loading = false
-                }).catch(err=>{
-                    this.table_loading = true
-                })
-            },
+            })
         },
+        //初始化数据库
+        initSql () {
+            this.$confirm('系统将恢复初始状态,不可恢复', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                init().then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                })
+            })
+        },
+        //下载
+        download (item) {
+            location.href = 'http://localhost/web/public/vueapi/data/download?filename=' + item.title
+        },
+        //还原
+        restore (item) {
+            this.$confirm('系统将继续还原操作,不可恢复', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                restore(item).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                })
+            })
+        },
+        //删除数据库文件
+        deleteSql (index, item) {
+            this.$confirm('该数据库将进行删除,不可恢复', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                del(item).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                    this.list.splice(index, 1)
+                })
+            })
+        },
+        //获取数据
+        _getData () {
+            getList().then(res => {
+                this.list = res.data
+                this.table_loading = false
+            }).catch(err => {
+                this.table_loading = true
+            })
+        },
+    },
 
-    }
+}
 </script>
 
 <style scoped>
-    .search-container{
-        margin-bottom: 10px;
-    }
-    .page-container{
-        float: right;
-        margin: 20px;
-    }
+.search-container {
+  margin-bottom: 10px;
+}
+.page-container {
+  float: right;
+  margin: 20px;
+}
 </style>

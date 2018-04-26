@@ -1,8 +1,7 @@
 import axios from 'axios'
-import {Message, MessageBox} from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import store from '../store'
-import {getToken} from '@/utils/auth'
-import router from '@/router'
+import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -45,7 +44,7 @@ service.interceptors.response.use(
                         })
                     })
                 }
-            }else{
+            } else {
                 //如果在登录界面就不报错
                 // return response.data
             }

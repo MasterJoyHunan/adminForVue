@@ -22,7 +22,7 @@ export function getRegAdminInfo() {
 }
 
 export function regAdmin(params) {
-    let url = params.id ? 'user/userEdit' : 'user/userAdd'
+    const url = params.id ? 'user/userEdit' : 'user/userAdd'
     return request({
         url: url,
         method: 'post',

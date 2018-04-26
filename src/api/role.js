@@ -9,7 +9,7 @@ export function getRoleList(params) {
 }
 
 export function addRoles(params) {
-    let url = params.id ? 'role/roleEdit' : 'role/roleAdd'
+    const url = params.id ? 'role/roleEdit' : 'role/roleAdd'
     return request({
         url: url,
         method: 'post',

@@ -29,95 +29,95 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
-    import {getRegAdminInfo, regAdmin} from '@/api/adminUser'
+import { mapGetters } from 'vuex'
+import { getRegAdminInfo, regAdmin } from '@/api/adminUser'
 
-    export default {
-        name: "adduserd",
-        created() {
-            this.$nextTick(() => {
-                this._getRole()
+export default {
+    name: "adduserd",
+    created () {
+        this.$nextTick(() => {
+            this._getRole()
+        })
+    },
+    data () {
+        return {
+            //表单双向绑定数据
+            formValue: {
+                user_name: '',
+                role_id: '',
+                password: '',
+                real_name: '',
+                status: 0,
+                id: null,
+            },
+            passwordPlaceholder: '',
+            user_name_readonly: false,
+            roles: {},
+            status: {},
+            //表单提交规则
+            formRules: {
+                user_name: [
+                    { required: true, message: '必填项', trigger: 'blur' },
+                    { min: 5, message: '最少为输入5位数', trigger: 'blur' }
+                ],
+                password: [
+                    // {required: true, message: '必填项', trigger: 'blur'},
+                    { min: 6, message: '最少为输入6位数', trigger: 'blur' }
+                ],
+                role_id: [
+                    { required: true, message: '必填项', trigger: 'change' },
+                ],
+                real_name: [
+                    { required: true, message: '必填项', trigger: 'blur' },
+                    { min: 2, message: '最少为输入2位数', trigger: 'blur' }
+                ],
+            }
+        }
+    },
+    methods: {
+        //提交表单
+        onSubmit () {
+            this.$refs.loginForm.validate(valid => {
+                if (!valid) {
+                    return false
+                }
+                regAdmin(this.formValue).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                    this.$router.push('/admin/user')
+                })
             })
         },
-        data() {
-            return {
-                //表单双向绑定数据
-                formValue: {
-                    user_name: '',
-                    role_id: '',
-                    password: '',
-                    real_name: '',
-                    status: 0,
-                    id: null,
-                },
-                passwordPlaceholder: '',
-                user_name_readonly: false,
-                roles: {},
-                status: {},
-                //表单提交规则
-                formRules: {
-                    user_name: [
-                        {required: true, message: '必填项', trigger: 'blur'},
-                        {min: 5, message: '最少为输入5位数', trigger: 'blur'}
-                    ],
-                    password: [
-                        // {required: true, message: '必填项', trigger: 'blur'},
-                        {min: 6, message: '最少为输入6位数', trigger: 'blur'}
-                    ],
-                    role_id: [
-                        {required: true, message: '必填项', trigger: 'change'},
-                    ],
-                    real_name: [
-                        {required: true, message: '必填项', trigger: 'blur'},
-                        {min: 2, message: '最少为输入2位数', trigger: 'blur'}
-                    ],
-                }
-            }
+        //重置表单
+        resetForm () {
+            this.$refs.loginForm.resetFields()
         },
-        methods: {
-            //提交表单
-            onSubmit() {
-                this.$refs.loginForm.validate(valid => {
-                    if (!valid) {
-                        return false
-                    }
-                    regAdmin(this.formValue).then(res => {
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        })
-                        this.$router.push('/admin/user')
-                    })
-                })
-            },
-            //重置表单
-            resetForm() {
-                this.$refs.loginForm.resetFields();
-            },
-            //从VUEX里取得用户信息(如果有的话就是编辑,没有的话就是添加)
-            _getRole() {
-                if(Object.keys(this.editAdmin).length > 0){
-                    this.formValue.user_name = this.editAdmin.user_name
-                    this.formValue.real_name = this.editAdmin.real_name
-                    this.formValue.role_id = this.editAdmin.role_id
-                    this.formValue.status = this.editAdmin.status
-                    this.formValue.id = this.editAdmin.id
-                    this.formValue.password = ''
-                    this.passwordPlaceholder = '不填不修改'
-                    this.user_name_readonly = true
-                }
-                getRegAdminInfo().then(res => {
-                    this.roles = res.data.role
-                    this.status = res.data.status
-                })
+        //从VUEX里取得用户信息(如果有的话就是编辑,没有的话就是添加)
+        _getRole () {
+            if (Object.keys(this.editAdmin).length > 0) {
+                this.formValue.user_name = this.editAdmin.user_name
+                this.formValue.real_name = this.editAdmin.real_name
+                this.formValue.role_id = this.editAdmin.role_id
+                this.formValue.status = this.editAdmin.status
+                this.formValue.id = this.editAdmin.id
+                this.formValue.password = ''
+                this.passwordPlaceholder = '不填不修改'
+                this.user_name_readonly = true
             }
-        },
-        computed: {
-            ...mapGetters([
-                'editAdmin'
-            ])
+            getRegAdminInfo().then(res => {
+                this.roles = res.data.role
+                this.status = res.data.status
+            })
         }
+    },
+    computed: {
+        ...mapGetters([
+            'editAdmin'
+        ])
     }
+}
 </script>
 
 <style scoped>

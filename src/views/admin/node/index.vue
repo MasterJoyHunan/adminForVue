@@ -53,151 +53,150 @@
 </template>
 
 <script>
-    import {getNode, delNode, addNode, editNode} from "@/api/node";
+import { getNode, delNode, addNode, editNode } from "@/api/node"
 
-    export default {
-        name: "node",
-        created(){
-            this._getData()
-        },
-        data(){
-            return {
-                tree: [],
-                showDialog: false,
-                title: '',
-                form:{
-                    id: 0,
-                    type_id: 0,
-                    node_name: '',
-                    control_name: '',
-                    action_name: '',
-                    component_name: '',
-                    is_menu: 0,
-                    p_name: '',
-                },
-                formRule:{
-                    node_name: [
-                        {required: true, message: '请输入节点名', trigger: 'blur'}
-                    ],
-                    control_name: [
-                        {required: true, message: '请输入控制器名', trigger: 'blur'}
-                    ],
-                    action_name: [
-                        {required: true, message: '请输入方法名', trigger: 'blur'}
-                    ],
-                    component_name: [
-                        // {required: true, message: '请输入组件名', trigger: 'blur'}
-                    ],
-                    is_menu: [
-                        {required: true, message: '请选择是否是菜单', trigger: 'blur'}
-                    ],
-                }
+export default {
+    name: "node",
+    created () {
+        this._getData()
+    },
+    data () {
+        return {
+            tree: [],
+            showDialog: false,
+            title: '',
+            form: {
+                id: 0,
+                type_id: 0,
+                node_name: '',
+                control_name: '',
+                action_name: '',
+                component_name: '',
+                is_menu: 0,
+                p_name: '',
+            },
+            formRule: {
+                node_name: [
+                    { required: true, message: '请输入节点名', trigger: 'blur' }
+                ],
+                control_name: [
+                    { required: true, message: '请输入控制器名', trigger: 'blur' }
+                ],
+                action_name: [
+                    { required: true, message: '请输入方法名', trigger: 'blur' }
+                ],
+                component_name: [
+                    // {required: true, message: '请输入组件名', trigger: 'blur'}
+                ],
+                is_menu: [
+                    { required: true, message: '请选择是否是菜单', trigger: 'blur' }
+                ],
             }
-        },
-        methods: {
-            renderContent(h, { node, data, store }) {
-                return (
+        }
+    },
+    methods: {
+        renderContent (h, { node, data, store }) {
+            return (
                 <span class="custom-tree-node">
                     <span>{node.label}</span>
                     <span class="operation">
                         <div>
-                            <el-button size="mini" type="text" style="color:#409EFF"  on-click={ () => this.append(node, data , 1) }>编辑该节点</el-button>
-                            <el-button size="mini" type="text" style="color:#67c23a" on-click={ () => this.append(node, data, 2) }>添加子节点</el-button>
-                            <el-button size="mini" type="text" style="color:#f56c6c" on-click={ () => this.remove(node, data) }>删除该节点</el-button>
+                            <el-button size="mini" type="text" style="color:#409EFF" on-click={() => this.append(node, data, 1)}>编辑该节点</el-button>
+                            <el-button size="mini" type="text" style="color:#67c23a" on-click={() => this.append(node, data, 2)}>添加子节点</el-button>
+                            <el-button size="mini" type="text" style="color:#f56c6c" on-click={() => this.remove(node, data)}>删除该节点</el-button>
                         </div>
                     </span>
-                </span>);
-            },
-            append(node, data, type){
-                this.showDialog = true
+                </span>)
+        },
+        append (node, data, type) {
+            this.showDialog = true
+            this.title = '添加节点'
+            if (type == 1) {
+                //编辑节点
+                this.form.p_name = node.parent.data.label || '顶级节点'
+                this.form.type_id = data.type_id
+                this.form.control_name = data.control_name
+                this.form.action_name = data.action_name
+                this.form.component_name = data.component_name
+                this.form.node_name = data.label
+                this.form.is_menu = data.is_menu
+                this.form.id = data.id
+            } else if (type == 2) {
+                //添加节点
                 this.title = '添加节点'
-                if(type == 1){
-                    //编辑节点
-                    this.form.p_name = node.parent.data.label || '顶级节点'
-                    this.form.type_id = data.type_id
-                    this.form.control_name = data.control_name
-                    this.form.action_name = data.action_name
-                    this.form.component_name = data.component_name
-                    this.form.node_name = data.label
-                    this.form.is_menu = data.is_menu
-                    this.form.id = data.id
-
-                }else if(type == 2){
-                    //添加节点
-                    this.title = '添加节点'
-                    this.form.p_name = data.label
-                    this.form.type_id = data.id
-                    this.form.control_name = ''
-                    this.form.action_name = ''
-                    this.form.component_name = ''
-                    this.form.node_name = ''
-                    this.form.is_menu = 2
-                    this.form.id = 0
-                }else{
-                    //添加顶级节点
-                    this.title = '添加节点'
-                    this.form.p_name = '顶级节点'
-                    this.form.type_id = 0
-                    this.form.control_name = '#'
-                    this.form.action_name = '#'
-                    this.form.component_name = ''
-                    this.form.node_name = ''
-                    this.form.is_menu = 2
-                    this.form.id = 0
+                this.form.p_name = data.label
+                this.form.type_id = data.id
+                this.form.control_name = ''
+                this.form.action_name = ''
+                this.form.component_name = ''
+                this.form.node_name = ''
+                this.form.is_menu = 2
+                this.form.id = 0
+            } else {
+                //添加顶级节点
+                this.title = '添加节点'
+                this.form.p_name = '顶级节点'
+                this.form.type_id = 0
+                this.form.control_name = '#'
+                this.form.action_name = '#'
+                this.form.component_name = ''
+                this.form.node_name = ''
+                this.form.is_menu = 2
+                this.form.id = 0
+            }
+        },
+        onSubmit () {
+            this.$refs.nodeForm.validate(valid => {
+                if (!valid) {
+                    return false
                 }
-            },
-            onSubmit(){
-                this.$refs.nodeForm.validate(valid => {
-                    if(!valid){
-                        return false
-                    }
-                    if(this.form.id === 0){
-                        //添加
-                        addNode(this.form).then(res=>{
-                            this.$message({
-                                message: res.msg,
-                                type: 'success'
-                            })
-                            this.showDialog = false
-                            this._getData()
-                        })
-                    }else{
-                        editNode(this.form).then(res=>{
-                            this.$message({
-                                message: res.msg,
-                                type: 'success'
-                            })
-                            this.showDialog = false
-                            this._getData()
-                        })
-                    }
-                })
-            },
-            remove(node, data){
-                this.$confirm('删除节点将不可恢复', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    delNode(data).then(res=>{
+                if (this.form.id === 0) {
+                    //添加
+                    addNode(this.form).then(res => {
                         this.$message({
                             message: res.msg,
                             type: 'success'
                         })
-                        const parent = node.parent;
-                        const children = parent.data.children || parent.data;
-                        const index = children.findIndex(d => d.id === data.id);
-                        children.splice(index, 1);
+                        this.showDialog = false
+                        this._getData()
                     })
-                })
-            },
-            _getData(){
-                getNode().then(res=>{
-                    this.tree = res.data
-                })
-            }
+                } else {
+                    editNode(this.form).then(res => {
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                        this.showDialog = false
+                        this._getData()
+                    })
+                }
+            })
         },
-    }
+        remove (node, data) {
+            this.$confirm('删除节点将不可恢复', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                delNode(data).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                    const parent = node.parent
+                    const children = parent.data.children || parent.data
+                    const index = children.findIndex(d => d.id === data.id)
+                    children.splice(index, 1)
+                })
+            })
+        },
+        _getData () {
+            getNode().then(res => {
+                this.tree = res.data
+            })
+        }
+    },
+}
 </script>
 
 <style lang="sass">

@@ -89,93 +89,93 @@
 </template>
 
 <script>
-    import {getAdminList, delAdmin} from '@/api/adminUser'
-    import {mapMutations} from 'vuex'
-    export default {
-        name: "userIndex",
-        created(){
-            this._getData()
-        },
-        data(){
-            return {
-                table_loading: true,
-                list: [],
-                params: {
-                    user_name: '',
-                    pageSize: 10, //	每页显示条目个数
-                    page: 1, //前页数
-                },
-                page_sizes: [10, 25, 50, 100],
-                total: 1   //总共多少页
-            }
-        },
+import { getAdminList, delAdmin } from '@/api/adminUser'
+import { mapMutations } from 'vuex'
+export default {
+    name: "userIndex",
+    created () {
+        this._getData()
+    },
+    data () {
+        return {
+            table_loading: true,
+            list: [],
+            params: {
+                user_name: '',
+                pageSize: 10, //	每页显示条目个数
+                page: 1, //前页数
+            },
+            page_sizes: [10, 25, 50, 100],
+            total: 1   //总共多少页
+        }
+    },
 
-        methods: {
-            //编辑用户,并把用户信息存储在VUEX,方便调用
-            handleEdit(index, info){
-                this.setEditAdmin(info)
-                this.$router.push('/admin/addAdmin')
-            },
-            //删除用户
-            handleDel(index, info){
-                this.$confirm('删除管理员将不可恢复', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    delAdmin(info).then(res=>{
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        })
-                        this.list.splice(index, 1)
+    methods: {
+        //编辑用户,并把用户信息存储在VUEX,方便调用
+        handleEdit (index, info) {
+            this.setEditAdmin(info)
+            this.$router.push('/admin/addAdmin')
+        },
+        //删除用户
+        handleDel (index, info) {
+            this.$confirm('删除管理员将不可恢复', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                delAdmin(info).then(res => {
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
                     })
+                    this.list.splice(index, 1)
                 })
-            },
-            //跳转到添加用户
-            addAdmin(flag){
-                this.$router.push('/admin/addAdmin/')
-                this.setEditAdmin({})
-            },
-            //搜索
-            search(){
-                this._getData()
-            },
-            //修改每页显示多少条数据
-            handleSizeChange(val) {
-                this.params.pageSize = val
-                this._getData()
-            },
-            //跳转页面
-            handleCurrentChange(val) {
-                this._getData()
-            },
-            //获取数据
-            _getData(){
-                getAdminList(this.params).then(res=>{
-                    this.list = res.data.data
-                    this.total = res.data.total
-                    this.pageSize = res.data.per_page
-                    this.page = res.data.current_page
-                    this.table_loading = false
-                }).catch(err=>{
-                    this.table_loading = true
-                })
-            },
-            ...mapMutations({
-                'setEditAdmin': 'SET_EDIT_ADMIN'
             })
         },
+        //跳转到添加用户
+        addAdmin (flag) {
+            this.$router.push('/admin/addAdmin/')
+            this.setEditAdmin({})
+        },
+        //搜索
+        search () {
+            this._getData()
+        },
+        //修改每页显示多少条数据
+        handleSizeChange (val) {
+            this.params.pageSize = val
+            this._getData()
+        },
+        //跳转页面
+        handleCurrentChange (val) {
+            this._getData()
+        },
+        //获取数据
+        _getData () {
+            getAdminList(this.params).then(res => {
+                this.list = res.data.data
+                this.total = res.data.total
+                this.pageSize = res.data.per_page
+                this.page = res.data.current_page
+                this.table_loading = false
+            }).catch(err => {
+                this.table_loading = true
+            })
+        },
+        ...mapMutations({
+            'setEditAdmin': 'SET_EDIT_ADMIN'
+        })
+    },
 
-    }
+}
 </script>
 
 <style scoped>
-    .search-container{
-        margin-bottom: 10px;
-    }
-    .page-container{
-        float: right;
-        margin: 20px;
-    }
+.search-container {
+  margin-bottom: 10px;
+}
+.page-container {
+  float: right;
+  margin: 20px;
+}
 </style>

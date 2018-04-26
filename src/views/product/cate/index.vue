@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <!-- <p style="border-bottom: 1px solid #000; padding: 10px;">商品分类列表</p>
+        <p style="border-bottom: 1px solid #000; padding: 10px;">商品分类列表</p>
         <div class="filter-container">
             <el-button type="primary" plain class="filter-item" @click="addCate()">添加分类</el-button>
             <div style="float: right">
@@ -159,7 +159,7 @@
                     </div>
                 </el-form-item>
             </el-form>
-        </el-dialog> -->
+        </el-dialog>
     </div>
 </template>
 
@@ -167,7 +167,7 @@
     import {getCate, addCate, editCate, delCate, addCateAttr, delCateAttr} from '@/api/cate'
 
     export default {
-        /* name: "product-cate",
+        name: "product-cate",
         created() {
             this._getData()
         },
@@ -270,7 +270,7 @@
 
             //添加新的属性提交
             handleInputConfirm(row, attr) {
-                let data = {pid: row.id, level: attr, name: this.inputValue}
+                const data = {pid: row.id, level: attr, name: this.inputValue}
                 addCateAttr(data).then(res => {
                     if (attr == 1) {
                         row.attr1.push(res.data)
@@ -280,7 +280,6 @@
                         row.new_attr2 = false
                     }
                 })
-
             },
             //删除属性
             deleteAttr(row, id, index, attr) {
@@ -310,8 +309,8 @@
                         this.$set(item, 'edit', false)
                         this.$set(item, 'new_attr1', false)
                         this.$set(item, 'new_attr2', false)
-                        let attr1 = []
-                        let attr2 = []
+                        const attr1 = []
+                        const attr2 = []
                         if (item.sku.length > 0) {
                             item.sku.forEach(sku => {
                                 sku.level == 1 ? attr1.push(sku) : attr2.push(sku)
@@ -331,7 +330,7 @@
                     this.table_loading = true
                 })
             },
-        }, */
+        },
 
     }
 </script>
