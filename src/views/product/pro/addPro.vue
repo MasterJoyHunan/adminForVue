@@ -3,7 +3,7 @@
         <el-form class="form-container" :inline="true" status-icon :rules="formRules" ref="fromInput" :model="formValue" @submit.native.prevent label-width="80px" label-position="left">
             <el-row>
                 <el-col :span="24" style="margin-bottom: 22px">
-                    <MDinput :maxlength="16" v-model="formValue.title">标题</MDinput>
+                    <MDinput :maxlength="16" v-model="formValue.title">输入标题</MDinput>
                 </el-col>
             </el-row>
             <el-row>
@@ -60,7 +60,20 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-
+            <el-row>
+                <el-col>
+                    <span class="diver">详细内容</span>
+                    <div class="editor-container">
+                        <tinymce :height=400 ref="editor" v-model="formValue.desc"></tinymce>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    <el-button type="primary" @click="onSubmit" style="float:right">提交</el-button>
+                </el-col>
+                </el-row>
+            
         </el-form>
         <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="">
@@ -71,6 +84,7 @@
 <script>
 import MDinput from "@/components/MDinput"
 import { inArray } from "@/utils/index"
+import tinymce from "@/components/Tinymce"
 const api = process.env.BASE_API
 const cdn = process.env.CDN
 export default {
@@ -88,6 +102,7 @@ export default {
                 imgs: [],
                 is_hot: 0,
                 status: 1,
+                desc: ''
             },
             formRules: {
                 title: [],
@@ -117,13 +132,20 @@ export default {
             this.formValue.imgs.unshift(res.data)
             console.log('uploadSuccess', res, file, fileList)
         },
+        //图片删除前钩子
         beforeRemove (file, fileList) {
             console.log('beforeRemove', file, fileList)
             return this.$confirm('确定移除？')
+        },
+        //提交
+        onSubmit() {
+
         }
+
     },
     components: {
-        MDinput
+        MDinput,
+        tinymce
     },
     watch: {
     }
@@ -134,9 +156,18 @@ export default {
     .form-container
         padding: 10px 50px
         .diver
-            display: inline-block
+            display: block
             font-size: 14px
             color: #606266
             line-height: 40px
             margin-bottom: 22px
+            border-bottom: 1px dashed #ccc
+        .editor-container 
+            min-height: 500px
+            margin: 0 0 30px
+            .editor-upload-btn-container 
+                text-align: right
+                margin-right: 10px
+                .editor-upload-btn 
+                display: inline-block
 </style>

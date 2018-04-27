@@ -21,9 +21,19 @@ import Layout from '../views/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
  **/
-export const constantRouterMap = [
-    {path: '/login', component: () => import('@/views/login/index'), hidden: true},
-    {path: '/404', component: () => import('@/views/404'), hidden: true},
+/* eslint-disable */
+export const constantRouterMap = [{
+        path: '/login',
+        component: () =>
+            import ('@/views/login/index'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/404'),
+        hidden: true
+    },
     {
         path: '',
         component: Layout,
@@ -32,8 +42,9 @@ export const constantRouterMap = [
         children: [{
             path: 'dashboard',
             name: 'index',
-            component: () => import('@/views/dashboard/index'),
-            meta: {title: '首页', icon: 'table'},
+            component: () =>
+                import ('@/views/dashboard/index'),
+            meta: { title: '首页', icon: 'table' },
         }]
     },
     {
@@ -41,32 +52,35 @@ export const constantRouterMap = [
         component: Layout,
         name: 'admin',
         redirect: '/admin/user',
-        meta: {title: '后台管理', icon: 'admin-manage'},
-        children: [
-            {
+        meta: { title: '后台管理', icon: 'admin-manage' },
+        children: [{
                 path: 'user',
                 name: 'admin-user',
-                component: () => import('@/views/admin/user/index'),
-                meta: {title: '后台用户列表'},
+                component: () =>
+                    import ('@/views/admin/user/index'),
+                meta: { title: '后台用户列表' },
             },
             {
                 path: 'addAdmin',
                 name: 'add-admin',
-                component: ()=> import('@/views/admin/user/addUser'),
-                meta: {title: '添加管理员'},
+                component: () =>
+                    import ('@/views/admin/user/addUser'),
+                meta: { title: '添加管理员' },
                 hidden: true
             },
             {
                 path: 'role',
                 name: 'admin-role',
-                component: () => import('@/views/admin/role/index'),
-                meta: {title: '角色管理'}
+                component: () =>
+                    import ('@/views/admin/role/index'),
+                meta: { title: '角色管理' }
             },
             {
                 path: 'node',
                 name: 'admin-node',
-                component: () => import('@/views/admin/node/index'),
-                meta: {title: '节点管理'}
+                component: () =>
+                    import ('@/views/admin/node/index'),
+                meta: { title: '节点管理' }
             },
         ]
     },
@@ -76,57 +90,58 @@ export const constantRouterMap = [
         component: Layout,
         alwaysShow: true,
         redirect: '/system/database',
-        meta: {title: '系统管理', icon: 'system'},
-        children: [
-            {
-                path: 'database',
-                name: 'database-list',
-                component: () => import('@/views/system/database/index'),
-                meta: {title: '数据库备份还原'},
-            },
-        ]
+        meta: { title: '系统管理', icon: 'system' },
+        children: [{
+            path: 'database',
+            name: 'database-list',
+            component: () =>
+                import ('@/views/system/database/index'),
+            meta: { title: '数据库备份还原' },
+        }, ]
     },
     {
         path: '/product',
         name: 'product',
         component: Layout,
         alwaysShow: true,
-        meta: {title: '商品管理', icon: 'product'},
-        children: [
-            {
+        meta: { title: '商品管理', icon: 'product' },
+        children: [{
                 path: 'cate',
                 name: 'product-cate',
-                component: () => import('@/views/product/cate/index'),
-                meta: {title: '商品分类'},
+                component: () =>
+                    import ('@/views/product/cate/index'),
+                meta: { title: '商品分类' },
             },
             {
                 path: 'goods',
                 name: 'product-goods',
-                component: () => import('@/views/product/pro/index'),
-                meta: {title: '商品管理'},
+                component: () =>
+                    import ('@/views/product/pro/index'),
+                meta: { title: '商品管理' },
             },
             {
                 path: 'addgoods',
                 name: 'product-addgoods',
-                component: () => import('@/views/product/pro/addPro'),
-                meta: {title: '商品添加'},
+                component: () =>
+                    import ('@/views/product/pro/addPro'),
+                meta: { title: '商品添加' },
                 hidden: true
             },
             {
                 path: 'editgoods',
                 name: 'product-editgoods',
-                component: () => import('@/views/product/pro/editPro'),
-                meta: {title: '商品修改'},
+                component: () =>
+                    import ('@/views/product/pro/editPro'),
+                meta: { title: '商品修改' },
                 hidden: true
             },
         ]
     },
-    {path: '*', redirect: '/404', hidden: true}
+    { path: '*', redirect: '/404', hidden: true }
 ]
 
 export default new Router({
     // mode: 'history', //后端支持可开
-    scrollBehavior: () => ({y: 0}),
+    scrollBehavior: () => ({ y: 0 }),
     routes: constantRouterMap
 })
-

@@ -24,13 +24,13 @@ export default {
             const path = this.$router.options.routes
             path.forEach((item, index) => {
                 if (item.hidden !== true && item.name !== 'dashboard') {
-                    if (!inArray(this.adminNode, item.name)) {
+                    if (inArray(this.adminNode, item.name) === false) {
                         path[index].hidden = true
                     }
                     if (item.children.length > 0) {
                         const child = item.children
                         child.forEach((item2, index2) => {
-                            if (!inArray(this.adminNode, item2.name)) {
+                            if (inArray(this.adminNode, item2.name) === false) {
                                 path[index].children[index2].hidden = true
                             }
                         })
