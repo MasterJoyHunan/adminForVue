@@ -9,8 +9,8 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="分类">
-                        <el-select v-model="formValue.cate" style="width: 200px">
-                            <el-option v-for="i in 3" :label="i" value="i" :key="i"></el-option>
+                        <el-select v-model="formValue.cate" style="width: 200px" @change="chooseCate">
+                            <el-option v-for="(item, index) in cate" :label="item.name" :value="item.id" :key="index"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -40,6 +40,20 @@
                     <el-form-item label="排序">
                         <el-input style="width: 200px" v-model.number="formValue.sort"></el-input>
                     </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row v-if="skuLabel.length > 0">
+                <el-col :span="24" v-if="sku1List.length > 0" style="padding-bottom: 22px">
+                    <span class="diver">选择商品属性1(可不选)</span>
+                    <!-- <el-form-item label="选择商品属性"> -->
+                        <el-checkbox v-model="chooseSku1" v-for="(le1, index) in sku1List" :key="index" :label="le1.name" border></el-checkbox>
+                    <!-- </el-form-item> -->
+                </el-col>
+                <el-col :span="24" v-if="sku2List.length > 0" style="padding-bottom: 22px">
+                    <span class="diver">选择商品属性2(可不选)</span>
+                    <!-- <el-form-item label="选择商品属性"> -->
+                        <el-checkbox v-model="chooseSku2" v-for="(le2, index) in sku2List" :key="index" :label="le2.name" border></el-checkbox>
+                    <!-- </el-form-item> -->
                 </el-col>
             </el-row>
             <span class="diver">图片上传(第一张将作为默认显示)</span>
@@ -72,8 +86,8 @@
                 <el-col>
                     <el-button type="primary" @click="onSubmit" style="float:right">提交</el-button>
                 </el-col>
-                </el-row>
-            
+            </el-row>
+
         </el-form>
         <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="">
@@ -85,6 +99,7 @@
 import MDinput from "@/components/MDinput"
 import { inArray } from "@/utils/index"
 import tinymce from "@/components/Tinymce"
+import { getCate } from "@/api/product"
 const api = process.env.BASE_API
 const cdn = process.env.CDN
 export default {
@@ -110,12 +125,49 @@ export default {
                 market_price: [],
                 price: []
             },
+            cate: [],
+            skuLabel: [],
+            sku1List: [],
+            sku2List: [],
+            chooseSku1: [],
+            chooseSku2: [],
             imgPostUrl: api + '/common/uploadImg', //图片上传地址
             dialogImageUrl: '', //已完成上传, 加载图片预览地址
             dialogVisible: false, //加载图片预览地址flag
         }
     },
+    created () {
+        getCate().then(res => {
+            this.cate = res.data
+        })
+    },
     methods: {
+        chooseCate (tag) {
+            this.skuLabel = []
+            this.chooseSku1 = []
+            this.chooseSku2 = []
+            this.cate.forEach((v, i) => {
+                if (v.id == tag) {
+                    if (v.sku.length > 0) {
+                        this.skuLabel = v.sku
+                        this.setSku(v.sku)
+                    }
+                }
+            })
+        },
+        setSku (sku) {
+            const sku1 = []
+            const sku2 = []
+            sku.forEach((item, index) => {
+                if (item.level == 1) {
+                    sku1.push(item)
+                } else {
+                    sku2.push(item)
+                }
+            })
+            this.sku1List = sku1.length > 0 ? sku1 : []
+            this.sku2List = sku2.length > 0 ? sku2 : []
+        },
         //图片预览
         handlePictureCardPreview (file) {
             console.log('handlePictureCardPreview', file)
@@ -138,7 +190,7 @@ export default {
             return this.$confirm('确定移除？')
         },
         //提交
-        onSubmit() {
+        onSubmit () {
 
         }
 
@@ -147,8 +199,6 @@ export default {
         MDinput,
         tinymce
     },
-    watch: {
-    }
 }
 </script>
 
