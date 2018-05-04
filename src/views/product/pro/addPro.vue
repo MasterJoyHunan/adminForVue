@@ -132,6 +132,7 @@
                         highlight-current-row
                         class="table-sku">
                         <el-table-column prop="name"
+                            width="20%"
                             label="属性名">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.name"
@@ -139,6 +140,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="market_price"
+                            width="15%"
                             label="市场价">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.market_price"
@@ -147,6 +149,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="price"
+                            width="15%"
                             label="售价">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.price"
@@ -155,6 +158,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="stock"
+                            width="15%"
                             label="库存">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.stock"
@@ -163,6 +167,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="sales_volume"
+                            width="15%"
                             label="销量">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.sales_volume"
