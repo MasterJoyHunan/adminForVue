@@ -5,3 +5,11 @@ export function getCate() {
         url: '/product/addPro',
     })
 }
+
+export function addPro(params) {
+    return request({
+        url: '/product/addPro',
+        method: 'post',
+        data: params
+    })
+}
