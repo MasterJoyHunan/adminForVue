@@ -180,10 +180,10 @@ import { getCate, addCate, editCate, delCate, addCateAttr, delCateAttr } from '@
 
 export default {
     name: "product-cate",
-    created () {
+    created() {
         this._getData()
     },
-    data () {
+    data() {
         return {
             table_loading: true,
             showDialog: false,
@@ -214,13 +214,13 @@ export default {
 
     methods: {
         //添加顶级分类
-        addCate () {
+        addCate() {
             this.form.name = ''
             this.form.sort = 1
             this.showDialog = true
         },
         //添加顶级分类提交
-        onSubmit () {
+        onSubmit() {
             this.$refs.cateForm.validate(valid => {
                 if (!valid) {
                     return false
@@ -236,7 +236,7 @@ export default {
             })
         },
         //修改分类
-        handleEdit (index, row) {
+        handleEdit(index, row) {
             editCate(row).then(res => {
                 this.$message({
                     message: res.msg,
@@ -248,14 +248,14 @@ export default {
         },
 
         //取消修改分类
-        handleCancel (row) {
+        handleCancel(row) {
             row.edit = false
             row.name = row.old_name
             row.sort = row.old_sort
         },
 
         //删除分类
-        handleDel (index, row) {
+        handleDel(index, row) {
             this.$confirm('是否确定删除该分类', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -272,7 +272,7 @@ export default {
         },
 
         //添加新的属性
-        addAttr (row, attr) {
+        addAttr(row, attr) {
             attr == 1 ? row.new_attr1 = true : row.new_attr2 = true
             this.$nextTick(() => {
                 this.$refs.inputEle.$refs.input.focus()
@@ -281,7 +281,7 @@ export default {
         },
 
         //添加新的属性提交
-        handleInputConfirm (row, attr) {
+        handleInputConfirm(row, attr) {
             const data = { pid: row.id, level: attr, name: this.inputValue }
             addCateAttr(data).then(res => {
                 if (attr == 1) {
@@ -294,28 +294,28 @@ export default {
             })
         },
         //删除属性
-        deleteAttr (row, id, index, attr) {
+        deleteAttr(row, id, index, attr) {
             delCateAttr({ id: id }).then(res => {
                 attr == 1 ? row.attr1.splice(index, 1) : row.attr2.splice(index, 1)
             })
         },
 
         //搜索
-        search () {
+        search() {
             this.table_loading = true
             this._getData()
         },
         //修改每页显示多少条数据
-        handleSizeChange (val) {
+        handleSizeChange(val) {
             this.params.pageSize = val
             this._getData()
         },
         //跳转页面
-        handleCurrentChange (val) {
+        handleCurrentChange(val) {
             this._getData()
         },
         //获取数据
-        _getData () {
+        _getData() {
             getCate(this.params).then(res => {
                 this.list = res.data.data.map(item => {
                     this.$set(item, 'edit', false)

@@ -1,5 +1,6 @@
 <template>
-    <div class="app-container">
+    <div class="app-container"
+        id="add-pro">
         <el-form class="form-container"
             :inline="true"
             status-icon
@@ -147,6 +148,7 @@
                         highlight-current-row
                         class="table-sku">
                         <el-table-column prop="name"
+                            align="center"
                             :render-header="overwrite"
                             label="属性名">
                             <template slot-scope="scope">
@@ -155,6 +157,8 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="market_price"
+                            align="center"
+                            :render-header="overwrite"
                             label="市场价">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.market_price"
@@ -163,6 +167,8 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="price"
+                            align="center"
+                            :render-header="overwrite"
                             label="售价">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.price"
@@ -171,6 +177,8 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="stock"
+                            align="center"
+                            :render-header="overwrite"
                             label="库存">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.stock"
@@ -179,6 +187,8 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="sales_volume"
+                            align="center"
+                            :render-header="overwrite"
                             label="销量">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.sales_volume"
@@ -218,7 +228,7 @@
                                     size="mini">删除</el-button>
                             </template>
                         </el-table-column>
-                        <el-table :data="[1]"
+                        <!-- <el-table :data="[1]"
                             fit
                             slot="append"
                             class="table-sku"
@@ -332,7 +342,7 @@
                             </el-table-column>
                             <el-table-column align="center">
                             </el-table-column>
-                        </el-table>
+                        </el-table> -->
                     </el-table>
                 </el-col>
             </el-row>
@@ -544,25 +554,23 @@ export default {
         },
         //重写头部
         overwrite(h, { column, $index }) {
-            console.log(h)
-            console.log(column)
-            console.log($index)
             return (
-                <el-tooltip class="item" effect="light" placement="top-start">
-                    <el-row slot="content">
+                <el-popover placement="top-start" trigger="click">
+                    <el-row>
                         <el-col span={15}>
                             <el-input size="mini"
-                                v-model={() => this.skuAttr.name}
+                                on-change={(str) => { this.skuAttr[column.property] = str }}
                                 placeholder="全部修改"></el-input>
                         </el-col>
                         <el-col span={9}>
                             <el-button size="mini"
+                                style="float: right"
                                 on-click={() => this.setAll(column.property)}
                                 type="success">确定</el-button>
                         </el-col>
                     </el-row>
-                    <div>属性名</div>
-                </el-tooltip>
+                    <span slot="reference" style="display: flex; justify-content:center">{column.label}<i class="el-icon-edit"></i></span>
+                </el-popover>
             )
         },
         //
@@ -586,6 +594,12 @@ export default {
         chooseSku2(newV, oldV) {
             this.buildChild()
         },
+        'skuAttr.name': {
+            handler(newVal, oldVal) {
+                console.log('skuAttr.name : ' + newVal)
+            },
+            deep: true
+        }
     },
     components: {
         MDinput, tinymce
@@ -594,36 +608,43 @@ export default {
 </script>
 
 <style lang="sass">
-    .form-container
-        padding: 10px 50px
-        #title-item
-            display: block
-            .el-form-item__content
-                display: block !important
-        .diver
-            display: block
-            font-size: 12px
-            color: #ccc
-            line-height: 40px
-            margin-bottom: 22px
-            border-bottom: 1px dashed #ccc
-        .editor-container 
-            min-height: 500px
-            margin: 0 0 30px
-            .editor-upload-btn-container 
-                text-align: right
-                margin-right: 10px
-                .editor-upload-btn 
-                display: inline-block
-        .table-sku
-            font-size: 12px
-        .upload-img-col
-            display: flex
-            justify-content: center
-            .upload-img
+    #add-pro
+        .form-container
+            padding: 10px 50px
+            #title-item
                 display: block
-                height: 28px
-                width: 28px
+                .el-form-item__content
+                    display: block !important
+            .diver
+                display: block
+                font-size: 12px
+                color: #ccc
+                line-height: 40px
+                margin-bottom: 22px
+                border-bottom: 1px dashed #ccc
+            .editor-container 
+                min-height: 500px
+                margin: 0 0 30px
+                .editor-upload-btn-container 
+                    text-align: right
+                    margin-right: 10px
+                    .editor-upload-btn 
+                    display: inline-block
+            .table-sku
+                font-size: 12px
+            .upload-img-col
+                display: flex
+                justify-content: center
+                .upload-img
+                    display: block
+                    height: 28px
+                    width: 28px
+            .el-icon-edit
+                margin-left: 5px
+                line-height: 23px
+                &:before
+                    -webkit-text-fill-color: #409EFF
+                    fill: #409EFF
 
             
 </style>

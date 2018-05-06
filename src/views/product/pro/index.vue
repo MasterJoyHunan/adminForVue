@@ -1,5 +1,6 @@
 <template>
-    <div class="app-container">
+    <div class="app-container"
+        id="product-index">
         <p style="border-bottom: 1px solid #000; padding: 10px;">商品列表</p>
         <div class="filter-container">
             <el-button type="primary"
@@ -26,14 +27,46 @@
         <el-table v-loading="table_loading"
             element-loading-text="加载中..."
             border
-            fit
             highlight-current-row
+            :row-class-name="getRowClass"
             row-key='id'
-            :expand-row-keys="expandKey"
             :data="list">
             <el-table-column type="expand">
-                <template slot-scope="scope">
-                    <div>{{scope.row.sku}}</div>
+                <template slot-scope="scope"
+                    v-if="scope.row.sku.length">
+                    <el-table :data="scope.row.sku"
+                        size="mini"
+                        class="sku-table"
+                        highlight-current-row>
+                        <el-table-column prop="name"
+                            align="center"
+                            label="属性名">
+                        </el-table-column>
+                        <el-table-column prop="img"
+                            align="center"
+                            label="商品图片">
+                            <template slot-scope="scope">
+                                <div class="img-container"
+                                    :style="{backgroundImage: `url(${cdn + scope.row.img})`}"></div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="market_price"
+                            align="center"
+                            label="市场价">
+                        </el-table-column>
+                        <el-table-column prop="price"
+                            align="center"
+                            label="售价">
+                        </el-table-column>
+                        <el-table-column prop="stock"
+                            align="center"
+                            label="库存">
+                        </el-table-column>
+                        <el-table-column prop="sales_volume"
+                            align="center"
+                            label="售出">
+                        </el-table-column>
+                    </el-table>
                 </template>
             </el-table-column>
             <el-table-column label="ID"
@@ -125,7 +158,6 @@ export default {
             table_loading: true,
             list: [],
             cate: [],
-            expandKey: [],
             params: {
                 title: '',
                 cate_id: '',
@@ -138,6 +170,13 @@ export default {
     },
 
     methods: {
+        // 给不需要展开的行添加一个类
+        getRowClass({ row }) {
+            if (row.sku.length == 0) {
+                return 'hide-expand'
+            }
+            return ''
+        },
         //编辑商品,并把用户信息存储在VUEX,方便调用
         handleEdit(index, info) {
             this.$router.push('/admin/addAdmin')
@@ -178,11 +217,6 @@ export default {
                 this.pageSize = res.data.pro.per_page
                 this.page = res.data.pro.current_page
                 this.table_loading = false
-                this.list.forEach(i => {
-                    if (i.sku.length > 0) {
-                        this.expandKey.push(i.id)
-                    }
-                })
             }).catch(err => {
                 this.table_loading = true
             })
@@ -191,12 +225,26 @@ export default {
 }
 </script>
 
-<style scoped>
-.search-container {
-  margin-bottom: 10px;
-}
-.page-container {
-  float: right;
-  margin: 20px;
-}
+<style lang="sass">
+#product-index
+    .search-container
+        margin-bottom: 10px
+    .page-container
+        float: right
+        margin: 20px
+    .hide-expand
+        .el-table__expand-column
+            .cell
+                visibility: hidden
+    .img-container
+        width: 23px
+        height: 23px
+        background-size: 100%
+        margin: 0 auto
+    // .sku-table
+        // .el-table--border
+            // border-right: none !important
+    .el-table__expanded-cell
+        padding: 10px
+
 </style>

@@ -1,27 +1,43 @@
 <template>
     <div class="login-container">
-        <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left"
-                 label-width="0px"
-                 class="card-box login-form">
+        <el-form autoComplete="on"
+            :model="loginForm"
+            :rules="loginRules"
+            ref="loginForm"
+            label-position="left"
+            label-width="0px"
+            class="card-box login-form">
             <h3 class="title">MJ后台管理系统</h3>
             <el-form-item prop="username">
-        <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user"/>
-        </span>
-                <el-input name="username" type="text" v-model="loginForm.user_name" autoComplete="on"
-                          placeholder="user_name"/>
+                <span class="svg-container svg-container_login">
+                    <svg-icon icon-class="user" />
+                </span>
+                <el-input name="username"
+                    type="text"
+                    v-model="loginForm.user_name"
+                    autoComplete="on"
+                    placeholder="user_name" />
             </el-form-item>
             <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
-        </span>
-                <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password"
-                          autoComplete="on"
-                          placeholder="*****"></el-input>
-                <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye"/></span>
+                <span class="svg-container">
+                    <svg-icon icon-class="password"></svg-icon>
+                </span>
+                <el-input name="password"
+                    :type="pwdType"
+                    @keyup.enter.native="handleLogin"
+                    v-model="loginForm.password"
+                    autoComplete="on"
+                    placeholder="*****"></el-input>
+                <span class="show-pwd"
+                    @click="showPwd">
+                    <svg-icon icon-class="eye" />
+                </span>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
+                <el-button type="primary"
+                    style="width:100%;"
+                    :loading="loading"
+                    @click.native.prevent="handleLogin">
                     登录
                 </el-button>
             </el-form-item>
@@ -34,7 +50,7 @@ import { mapActions } from 'vuex'
 
 export default {
     name: 'login',
-    data () {
+    data() {
         return {
             loginForm: {
                 user_name: 'admin',
@@ -49,14 +65,14 @@ export default {
         }
     },
     methods: {
-        showPwd () {
+        showPwd() {
             if (this.pwdType === 'password') {
                 this.pwdType = ''
             } else {
                 this.pwdType = 'password'
             }
         },
-        handleLogin () {
+        handleLogin() {
             this.$refs.loginForm.validate(valid => {
                 if (valid) {
                     this.loading = true

@@ -5,9 +5,9 @@
 </template>
 
 <script>
-    export default {
-        name: "editPro"
-    }
+export default {
+    name: "editPro"
+}
 </script>
 
 <style scoped>
