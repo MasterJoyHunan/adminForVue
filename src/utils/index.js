@@ -2,7 +2,7 @@
  * Created by jiachenpan on 16/11/18.
  */
 
-export function parseTime (time, cFormat) {
+export function parseTime(time, cFormat) {
     if (arguments.length === 0) {
         return null
     }
@@ -34,7 +34,7 @@ export function parseTime (time, cFormat) {
     return time_str
 }
 
-export function formatTime (time, option) {
+export function formatTime(time, option) {
     time = +time * 1000
     const d = new Date(time)
     const now = Date.now()
@@ -57,7 +57,7 @@ export function formatTime (time, option) {
     }
 }
 
-export function inArray (arr, obj) {
+export function inArray(arr, obj) {
     let i = arr.length
     while (i--) {
         if (arr[i] === obj) {

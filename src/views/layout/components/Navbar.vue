@@ -1,20 +1,28 @@
 <template>
-    <el-menu class="navbar" mode="horizontal">
-        <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+    <el-menu class="navbar"
+        mode="horizontal">
+        <hamburger class="hamburger-container"
+            :toggleClick="toggleSideBar"
+            :isActive="sidebar.opened"></hamburger>
         <breadcrumb></breadcrumb>
-        <el-dropdown class="avatar-container" trigger="click">
+        <el-dropdown class="avatar-container"
+            trigger="click">
             <div class="avatar-wrapper">
-                <img class="user-avatar" :src="avatar">
+                <img class="user-avatar"
+                    :src="avatar">
                 <i class="el-icon-caret-bottom"></i>
             </div>
-            <el-dropdown-menu class="user-dropdown" slot="dropdown">
-                <router-link class="inlineBlock" to="/">
+            <el-dropdown-menu class="user-dropdown"
+                slot="dropdown">
+                <router-link class="inlineBlock"
+                    to="/">
                     <el-dropdown-item>
                         主页
                     </el-dropdown-item>
                 </router-link>
                 <el-dropdown-item divided>
-                    <span @click="logout" style="display:block;">退出</span>
+                    <span @click="logout"
+                        style="display:block;">退出</span>
                 </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
@@ -28,7 +36,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
-    data () {
+    data() {
         return {
             avatar,
         }
@@ -43,10 +51,10 @@ export default {
         ])
     },
     methods: {
-        toggleSideBar () {
+        toggleSideBar() {
             this.$store.dispatch('ToggleSideBar')
         },
-        logout () {
+        logout() {
             this.$store.dispatch('LogOut').then(() => {
                 location.reload() // 为了重新实例化vue-router对象 避免bug
             })

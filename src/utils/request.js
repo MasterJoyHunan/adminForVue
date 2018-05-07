@@ -40,7 +40,7 @@ service.interceptors.response.use(
                         type: 'warning'
                     }).then(() => {
                         store.dispatch('FedLogOut').then(() => {
-                            location.reload()// 为了重新实例化vue-router对象 避免bug
+                            location.reload() // 为了重新实例化vue-router对象 避免bug
                         })
                     })
                 }
@@ -55,7 +55,7 @@ service.interceptors.response.use(
                     type: 'warning'
                 }).then(() => {
                     store.dispatch('FedLogOut').then(() => {
-                        location.reload()// 为了重新实例化vue-router对象 避免bug
+                        location.reload() // 为了重新实例化vue-router对象 避免bug
                     })
                 })
             }
@@ -65,7 +65,7 @@ service.interceptors.response.use(
         }
     },
     error => {
-        console.log('err' + error)// for debug
+        console.log('err' + error) // for debug
         Message({
             message: error.message,
             type: 'error',

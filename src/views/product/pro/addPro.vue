@@ -645,6 +645,4 @@ export default {
                 &:before
                     -webkit-text-fill-color: #409EFF
                     fill: #409EFF
-
-            
 </style>

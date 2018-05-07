@@ -20,10 +20,10 @@ const user = {
         SET_ROLES: (state, roles) => {
             state.roles = roles
         },
-        SET_EDIT_ADMIN: (state, editAdmin) =>{
+        SET_EDIT_ADMIN: (state, editAdmin) => {
             state.editAdmin = editAdmin
         },
-        SET_ADMIN_NODE: (state, node)=>{
+        SET_ADMIN_NODE: (state, node) => {
             state.node = node
         }
     },

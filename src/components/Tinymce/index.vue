@@ -1,8 +1,11 @@
 <template>
     <div class="tinymce-container editor-container">
-        <textarea class="tinymce-textarea" id="tinymceId"></textarea>
+        <textarea class="tinymce-textarea"
+            id="tinymceId"></textarea>
         <div class="editor-custom-btn-container">
-            <editorImage color="#20a0ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>
+            <editorImage color="#20a0ff"
+                class="editor-upload-btn"
+                @successCBK="imageSuccessCBK"></editorImage>
         </div>
     </div>
 </template>
@@ -21,7 +24,7 @@ export default {
         toolbar: {
             type: Array,
             required: false,
-            default () {
+            default() {
                 return ['removeformat undo redo |  bullist numlist | outdent indent | forecolor | fullscreen code', 'bold italic blockquote | h2 p  media link | alignleft aligncenter alignright  ']
             }
         },
@@ -34,30 +37,30 @@ export default {
             default: 360
         }
     },
-    data () {
+    data() {
         return {
             hasChange: false,
             hasInit: false,
         }
     },
     watch: {
-        value (val) {
+        value(val) {
             if (!this.hasChange && this.hasInit) {
                 this.$nextTick(() => window.tinymce.get('tinymceId').setContent(val))
             }
         }
     },
-    mounted () {
+    mounted() {
         this.initTinymce()
     },
-    activated () {
+    activated() {
         this.initTinymce()
     },
-    deactivated () {
+    deactivated() {
         this.destroyTinymce()
     },
     methods: {
-        initTinymce () {
+        initTinymce() {
             const _this = this
             window.tinymce.init({
                 selector: '#tinymceId',
@@ -124,24 +127,24 @@ export default {
                 // },
             })
         },
-        destroyTinymce () {
+        destroyTinymce() {
             if (window.tinymce.get('tinymceId')) {
                 window.tinymce.get('tinymceId').destroy()
             }
         },
-        setContent (value) {
+        setContent(value) {
             window.tinymce.get('tinymceId').setContent(value)
         },
-        getContent () {
+        getContent() {
             window.tinymce.get('tinymceId').getContent()
         },
-        imageSuccessCBK (arr) {
+        imageSuccessCBK(arr) {
             arr.forEach(v => {
                 window.tinymce.get('tinymceId').insertContent(`<img class="wscnph" src="${v.url}" >`)
             })
         }
     },
-    destroyed () {
+    destroyed() {
         this.destroyTinymce()
     }
 }

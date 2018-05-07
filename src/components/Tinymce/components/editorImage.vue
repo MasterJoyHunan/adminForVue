@@ -38,7 +38,7 @@ export default {
             default: '#20a0ff'
         }
     },
-    data () {
+    data() {
         return {
             dialogVisible: false,
             listObj: {},
@@ -47,10 +47,10 @@ export default {
         }
     },
     methods: {
-        checkAllSuccess () {
+        checkAllSuccess() {
             return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
         },
-        handleSubmit () {
+        handleSubmit() {
             const arr = Object.keys(this.listObj).map(v => this.listObj[v])
             if (!this.checkAllSuccess()) {
                 this.$message('请等待所有图片上传成功 或 出现了网络问题，请刷新页面重新上传！')
@@ -62,7 +62,7 @@ export default {
             this.fileList = []
             this.dialogVisible = false
         },
-        handleSuccess (response, file) {
+        handleSuccess(response, file) {
             const uid = file.uid
             const objKeyArr = Object.keys(this.listObj)
             for (let i = 0, len = objKeyArr.length; i < len; i++) {
@@ -73,7 +73,7 @@ export default {
                 }
             }
         },
-        handleRemove (file) {
+        handleRemove(file) {
             const uid = file.uid
             const objKeyArr = Object.keys(this.listObj)
             for (let i = 0, len = objKeyArr.length; i < len; i++) {
@@ -83,7 +83,7 @@ export default {
                 }
             }
         },
-        beforeUpload (file) {
+        beforeUpload(file) {
             const _self = this
             const _URL = window.URL || window.webkitURL
             const fileName = file.uid
@@ -91,7 +91,7 @@ export default {
             return new Promise((resolve, reject) => {
                 const img = new Image()
                 img.src = _URL.createObjectURL(file)
-                img.onload = function () {
+                img.onload = () => {
                     _self.listObj[fileName] = { hasSuccess: false, uid: file.uid, width: this.width, height: this.height }
                 }
                 resolve(true)

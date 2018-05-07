@@ -2,49 +2,64 @@
     <div class="app-container">
         <p style="border-bottom: 1px solid #000; padding: 10px;">节点列表</p>
         <div class="filter-container">
-            <el-button type="primary" plain class="filter-item" @click="append('')">添加顶级节点</el-button>
+            <el-button type="primary"
+                plain
+                class="filter-item"
+                @click="append('')">添加顶级节点</el-button>
         </div>
         <el-tree style="width: 40%; margin: 50px 0 0 80px;"
-                :data="tree"
-                node-key="id"
-                :expand-on-click-node="false"
-                :render-content="renderContent"
-        >
+            :data="tree"
+            node-key="id"
+            :expand-on-click-node="false"
+            :render-content="renderContent">
         </el-tree>
-        <el-dialog
-                :visible.sync="showDialog"
-                :title="title" width="30%"
-        >
-            <el-form
-                    :model="form"
-                    status-icon label-width="100px" :rules="formRule" ref="nodeForm"
-                    @submit.native.prevent
-            >
-                <el-form-item label="节点名" prop="node_name">
+        <el-dialog :visible.sync="showDialog"
+            :title="title"
+            width="30%">
+            <el-form :model="form"
+                status-icon
+                label-width="100px"
+                :rules="formRule"
+                ref="nodeForm"
+                @submit.native.prevent>
+                <el-form-item label="节点名"
+                    prop="node_name">
                     <el-input v-model="form.node_name"></el-input>
                 </el-form-item>
                 <el-form-item label="所属节点">
-                    <el-input v-model="form.p_name" disabled></el-input>
+                    <el-input v-model="form.p_name"
+                        disabled></el-input>
                 </el-form-item>
-                <el-form-item label="控制器名" prop="control_name">
-                    <el-input v-model="form.control_name" :disabled="!form.type_id"></el-input>
+                <el-form-item label="控制器名"
+                    prop="control_name">
+                    <el-input v-model="form.control_name"
+                        :disabled="!form.type_id"></el-input>
                 </el-form-item>
-                <el-form-item label="方法名" prop="action_name">
-                    <el-input v-model="form.action_name" :disabled="!form.type_id"></el-input>
+                <el-form-item label="方法名"
+                    prop="action_name">
+                    <el-input v-model="form.action_name"
+                        :disabled="!form.type_id"></el-input>
                 </el-form-item>
-                <el-form-item label="组件名" prop="component_name">
-                    <el-input v-model="form.component_name" ></el-input>
+                <el-form-item label="组件名"
+                    prop="component_name">
+                    <el-input v-model="form.component_name"></el-input>
                 </el-form-item>
-                <el-form-item label="是否是菜单" prop="is_menu">
-                    <el-radio-group v-model="form.is_menu" :disabled="!form.type_id">
-                        <el-radio :label="2" border>是</el-radio>
-                        <el-radio :label="1" border>否</el-radio>
+                <el-form-item label="是否是菜单"
+                    prop="is_menu">
+                    <el-radio-group v-model="form.is_menu"
+                        :disabled="!form.type_id">
+                        <el-radio :label="2"
+                            border>是</el-radio>
+                        <el-radio :label="1"
+                            border>否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item>
                     <div style="float: right">
-                        <el-button type="primary" @click="onSubmit">提交</el-button>
-                        <el-button type="success" @click="showDialog=false">取消</el-button>
+                        <el-button type="primary"
+                            @click="onSubmit">提交</el-button>
+                        <el-button type="success"
+                            @click="showDialog=false">取消</el-button>
                     </div>
                 </el-form-item>
             </el-form>
@@ -57,10 +72,10 @@ import { getNode, delNode, addNode, editNode } from "@/api/node"
 
 export default {
     name: "node",
-    created () {
+    created() {
         this._getData()
     },
-    data () {
+    data() {
         return {
             tree: [],
             showDialog: false,
@@ -95,7 +110,7 @@ export default {
         }
     },
     methods: {
-        renderContent (h, { node, data, store }) {
+        renderContent(h, { node, data, store }) {
             return (
                 <span class="custom-tree-node">
                     <span>{node.label}</span>
@@ -108,7 +123,7 @@ export default {
                     </span>
                 </span>)
         },
-        append (node, data, type) {
+        append(node, data, type) {
             this.showDialog = true
             this.title = '添加节点'
             if (type == 1) {
@@ -145,7 +160,7 @@ export default {
                 this.form.id = 0
             }
         },
-        onSubmit () {
+        onSubmit() {
             this.$refs.nodeForm.validate(valid => {
                 if (!valid) {
                     return false
@@ -172,7 +187,7 @@ export default {
                 }
             })
         },
-        remove (node, data) {
+        remove(node, data) {
             this.$confirm('删除节点将不可恢复', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -190,7 +205,7 @@ export default {
                 })
             })
         },
-        _getData () {
+        _getData() {
             getNode().then(res => {
                 this.tree = res.data
             })

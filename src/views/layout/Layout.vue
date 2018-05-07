@@ -1,5 +1,6 @@
 <template>
-    <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
+    <div class="app-wrapper"
+        :class="{hideSidebar:!sidebar.opened}">
         <sidebar class="sidebar-container"></sidebar>
         <div class="main-container">
             <navbar></navbar>
@@ -9,29 +10,29 @@
 </template>
 
 <script>
-    import {Navbar, Sidebar, AppMain} from '@/views/layout/components'
-    import {mapGetters} from 'vuex'
+import { Navbar, Sidebar, AppMain } from '@/views/layout/components'
+import { mapGetters } from 'vuex'
 
-    export default {
-        name: 'layout',
-        components: {
-            Navbar,
-            Sidebar,
-            AppMain
-        },
-        computed: {
-            ...mapGetters(['sidebar'])
-        }
+export default {
+    name: 'layout',
+    components: {
+        Navbar,
+        Sidebar,
+        AppMain
+    },
+    computed: {
+        ...mapGetters(['sidebar'])
     }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-    @import "src/styles/mixin.scss";
+@import "src/styles/mixin.scss";
 
-    .app-wrapper {
-        @include clearfix;
-        position: relative;
-        height: 100%;
-        width: 100%;
-    }
+.app-wrapper {
+  @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
 </style>
