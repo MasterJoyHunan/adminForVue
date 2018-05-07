@@ -25,6 +25,7 @@
             </div>
         </div>
         <el-table v-loading="table_loading"
+            ref="tableRef"
             element-loading-text="加载中..."
             border
             highlight-current-row
@@ -46,8 +47,10 @@
                             align="center"
                             label="商品图片">
                             <template slot-scope="scope">
-                                <div class="img-container"
-                                    :style="{backgroundImage: `url(${cdn + scope.row.img})`}"></div>
+                                <div class="img-container">
+                                    <img :src="cdn + scope.row.img"
+                                        class="img-container">
+                                </div>
                             </template>
                         </el-table-column>
                         <el-table-column prop="market_price"
@@ -217,6 +220,7 @@ export default {
                 this.pageSize = res.data.pro.per_page
                 this.page = res.data.pro.current_page
                 this.table_loading = false
+                this.$refs.tableRef.doLayout()
             }).catch(err => {
                 this.table_loading = true
             })
@@ -239,12 +243,12 @@ export default {
     .img-container
         width: 23px
         height: 23px
-        background-size: 100%
         margin: 0 auto
-    // .sku-table
-        // .el-table--border
-            // border-right: none !important
+    .sku-table
+        td, th
+            border-right: none 
     .el-table__expanded-cell
         padding: 10px
+        background: #f0f0f0
 
 </style>

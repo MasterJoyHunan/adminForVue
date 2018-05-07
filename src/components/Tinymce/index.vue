@@ -71,7 +71,7 @@ export default {
                 menubar: this.menubar,
                 plugins: 'advlist,autolink,code,paste,textcolor, colorpicker,fullscreen,link,lists,media,wordcount, imagetools ',
                 // language: 'zh_CN',
-                language_url: 'http://cdn.masterjoy.top/zh_CN.js',
+                // language_url: 'http://cdn.masterjoy.top/zh_CN.js',
                 end_container_on_empty_block: true,
                 powerpaste_word_import: 'clean',
                 code_dialog_height: 450,

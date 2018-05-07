@@ -197,6 +197,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="img"
+                            :render-header="overwriteImg"
                             align="center"
                             label="上传图片">
                             <template slot-scope="scope">
@@ -212,7 +213,6 @@
                                     <img :src="cdn + scope.row.img"
                                         class="upload-img"
                                         v-else
-                                        style="height: 28px; width: 28px;"
                                         slot="trigger"
                                         alt="">
                                 </el-upload>
@@ -228,121 +228,6 @@
                                     size="mini">删除</el-button>
                             </template>
                         </el-table-column>
-                        <!-- <el-table :data="[1]"
-                            fit
-                            slot="append"
-                            class="table-sku"
-                            :show-header="false">
-                            <el-table-column align="center">
-                                <template slot-scope="scope">
-                                    <el-row>
-                                        <el-col :span="15">
-                                            <el-input size="mini"
-                                                v-model="skuAttr.name"
-                                                placeholder="全部修改"></el-input>
-                                        </el-col>
-                                        <el-col :span="9">
-                                            <el-button size="mini"
-                                                @click="setAll('name')"
-                                                type="success">确定</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center">
-                                <template slot-scope="scope">
-                                    <el-row>
-                                        <el-col :span="15">
-                                            <el-input size="mini"
-                                                v-model="skuAttr.market_price"
-                                                placeholder="全部修改"></el-input>
-                                        </el-col>
-                                        <el-col :span="9">
-                                            <el-button size="mini"
-                                                @click="setAll('market_price')"
-                                                type="success">确定</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center">
-                                <template slot-scope="scope">
-                                    <el-row>
-                                        <el-col :span="15">
-                                            <el-input size="mini"
-                                                v-model="skuAttr.price"
-                                                placeholder="全部修改"></el-input>
-                                        </el-col>
-                                        <el-col :span="9">
-                                            <el-button size="mini"
-                                                @click="setAll('price')"
-                                                type="success">确定</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center">
-                                <template slot-scope="scope">
-                                    <el-row>
-                                        <el-col :span="15">
-                                            <el-input size="mini"
-                                                v-model="skuAttr.stock"
-                                                placeholder="全部修改"></el-input>
-                                        </el-col>
-                                        <el-col :span="9">
-                                            <el-button size="mini"
-                                                @click="setAll('stock')"
-                                                type="success">确定</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center">
-                                <template slot-scope="scope">
-                                    <el-row>
-                                        <el-col :span="15">
-                                            <el-input size="mini"
-                                                v-model="skuAttr.sales_volume"
-                                                placeholder="全部修改"></el-input>
-                                        </el-col>
-                                        <el-col :span="9">
-                                            <el-button size="mini"
-                                                @click="setAll('sales_volume')"
-                                                type="success">确定</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="img"
-                                align="center"
-                                label="上传图片">
-                                <template slot-scope="scope">
-                                    <el-upload :on-success="setAllImg"
-                                        :show-file-list="false"
-                                        :action=imgPostUrl
-                                        class="upload-img-col">
-                                        <el-button slot="trigger"
-                                            v-if="!skuAttr.img"
-                                            size="mini"
-                                            type="primary">全部替换</el-button>
-                                        <el-row v-else
-                                            slot="trigger">
-                                            <el-col :span="15">
-                                                <img :src="cdn + skuAttr.img"
-                                                    class="upload-img">
-                                            </el-col>
-                                            <el-col :span="9">
-                                                <el-button size="mini"
-                                                    @click.stop="setAll('img')"
-                                                    type="success">确定</el-button>
-                                            </el-col>
-                                        </el-row>
-                                    </el-upload>
-                                </template>
-                            </el-table-column>
-                            <el-table-column align="center">
-                            </el-table-column>
-                        </el-table> -->
                     </el-table>
                 </el-col>
             </el-row>
@@ -521,6 +406,10 @@ export default {
         onSubmit() {
             this.$refs.fromInput.validate(valid => {
                 if (!valid) {
+                    this.$message({
+                        message: '信息填写错误,请仔细检查',
+                        type: 'error'
+                    })
                     return false
                 }
                 addPro(this.formValue).then(res => {
@@ -534,7 +423,6 @@ export default {
         },
         // 添加新的SKU属性, 笛卡尔积
         buildChild() {
-            // console.log(this.chooseSku1, this.chooseSku2)
             this.formValue.sku = []
             if (this.chooseSku1.length > 0 && this.chooseSku2.length == 0) {
                 this.chooseSku1.forEach((item, index) => {
@@ -573,10 +461,74 @@ export default {
                 </el-popover>
             )
         },
-        //
+        //重写图片上传头部
+        overwriteImg(h, { column, $index }) {
+            // const _this = this
+            if (!this.skuAttr.img) {
+                return h('el-popover', {
+                    props: {
+                        placement: 'top-start',
+                        trigger: 'click'
+                    }
+                }, [h('el-upload', {
+                    props: {
+                        action: this.imgPostUrl,
+                        showFileList: false,
+                        onSuccess: this.setAllImg
+                    },
+                }, [(<el-button slot="trigger"
+                    size="mini"
+                    type="primary">选取文件</el-button>)]), (<span slot="reference" style="display: flex; justify-content:center">{column.label}<i class="el-icon-edit"></i></span>)]
+                )
+            } else {
+                /* return (
+                    <el-popover placement="top-start" trigger="click">
+                        <el-row>
+                            <el-col span={15} style="display: flex; justify-content:center">
+                                <el-upload
+                                    action={this.imgPostUrl}
+                                    showFileList={false}
+                                    on-success={() => _this.setAllImg}
+                                >
+                                    <img src={this.cdn + this.skuAttr.img} style="height: 28px; width: 28px;" />
+                                </el-upload>
+                            </el-col>
+                            <el-col span={9}>
+                                <el-button size="mini"
+                                    style="float: right"
+                                    on-click={() => this.setAll('img')}
+                                    type="success">确定</el-button>
+                            </el-col>
+                        </el-row>
+                        <span slot="reference" style="display: flex; justify-content:center">{column.label}<i class="el-icon-edit"></i></span>
+                    </el-popover>
+                ) */
+                return (
+                    <el-popover placement="top-start" trigger="click">
+                        <el-row>
+                            <el-col span={15} style="display: flex; justify-content:center">
+                                {h('el-upload', {
+                                    props: {
+                                        action: this.imgPostUrl,
+                                        showFileList: false,
+                                        onSuccess: this.setAllImg
+                                    }                                }
+                                    , [(<img src={this.cdn + this.skuAttr.img} style="height: 28px; width: 28px;" />)])}
+                            </el-col>
+                            <el-col span={9}>
+                                <el-button size="mini"
+                                    style="float: right"
+                                    on-click={() => this.setAll('img')}
+                                    type="success">确定</el-button>
+                            </el-col>
+                        </el-row>
+                        <span slot="reference" style="display: flex; justify-content:center">{column.label}<i class="el-icon-edit"></i></span>
+                    </el-popover>
+                )
+            }
+        },
+        //将整列SKU设置为同一个
         setAll(index) {
-            console.log(index)
-            console.log(this.skuAttr[index])
             this.formValue.sku.forEach(item => {
                 this.$set(item, index, this.skuAttr[index])
             })
@@ -594,12 +546,6 @@ export default {
         chooseSku2(newV, oldV) {
             this.buildChild()
         },
-        'skuAttr.name': {
-            handler(newVal, oldVal) {
-                console.log('skuAttr.name : ' + newVal)
-            },
-            deep: true
-        }
     },
     components: {
         MDinput, tinymce
