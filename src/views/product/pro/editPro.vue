@@ -26,8 +26,7 @@
                         prop="cate_id">
                         <el-select v-model="formValue.cate_id"
                             disabled
-                            style="width: 200px"
-                            @change="chooseCate">
+                            style="width: 200px">
                             <el-option v-for="(item, index) in cate"
                                 :label="item.name"
                                 :value="item.id"
@@ -91,6 +90,7 @@
                         v-for="(le1, index) in sku1List"
                         :key="index"
                         :label="le1"
+                        @change="chooseCate"
                         border>{{le1.name}}</el-checkbox>
                 </el-col>
                 <el-col :span="24"
@@ -101,6 +101,7 @@
                         v-for="(le2, index) in sku2List"
                         :key="index"
                         :label="le2"
+                        @change="chooseCate"
                         border>{{le2.name}}</el-checkbox>
                 </el-col>
             </el-row>
@@ -266,7 +267,7 @@ import { inArray } from "@/utils/index"
 import tinymce from "@/components/Tinymce"
 import { getCate, editPro, delPro } from "@/api/product"
 import { mapGetters } from 'vuex'
-const merge = require('webpack-merge')
+// const merge = require('webpack-merge')
 const api = process.env.BASE_API
 const cdn = process.env.CDN
 export default {
@@ -338,7 +339,6 @@ export default {
             dialogImageUrl: '', //已完成上传, 加载图片预览地址
             dialogVisible: false, //加载图片预览地址flag
             fileList: [],
-            skuInit: false,
         }
     },
     computed: {
@@ -388,14 +388,29 @@ export default {
                         })
                     })
                 }
-                this.skuInit = true
             }
         })
     },
     mounted() {
         this.$nextTick(() => {
             // 渲染数据
-            this.formValue = merge(this.formValue, this.pro)
+            Object.keys(this.pro).map(index => {
+                // 基础没学好,如果赋值数组会直接爆炸
+                if (index == 'sku' && this.pro.sku.length > 0) {
+                    // this.formValue.sku = this.pro.sku.concat([])
+                    this.pro.sku.forEach(i => {
+                        const j = {}
+                        Object.keys(i).map(iv => {
+                            j[iv] = i[iv]
+                        })
+                        this.formValue.sku.push(j)
+                    })
+                } else {
+                    this.formValue[index] = this.pro[index]
+                }
+            })
+
+            // this.formValue = merge(this.pro, this.formValue)
             // 渲染上传图片
             this.pro.imgs.map(item => {
                 this.fileList.push({ url: cdn + item })
@@ -403,19 +418,9 @@ export default {
         })
     },
     methods: {
-        // 选择分类
+        // 选择分类设置的SKU
         chooseCate(tag) {
-            this.skuLabel = []
-            this.chooseSku1 = []
-            this.chooseSku2 = []
-            this.cate.forEach((v, i) => {
-                if (v.id == tag) {
-                    if (v.sku.length > 0) {
-                        this.skuLabel = v.sku
-                        this.setSku(v.sku)
-                    }
-                }
-            })
+            console.log(tag)
         },
         // 选择sku
         setSku(sku) {
@@ -553,28 +558,6 @@ export default {
                     type="primary">选取文件</el-button>)]), (<span slot="reference" style="display: flex; justify-content:center">{column.label}<i class="el-icon-edit"></i></span>)]
                 )
             } else {
-                /* return (
-                    <el-popover placement="top-start" trigger="click">
-                        <el-row>
-                            <el-col span={15} style="display: flex; justify-content:center">
-                                <el-upload
-                                    action={this.imgPostUrl}
-                                    showFileList={false}
-                                    on-success={() => _this.setAllImg}
-                                >
-                                    <img src={this.cdn + this.skuAttr.img} style="height: 28px; width: 28px;" />
-                                </el-upload>
-                            </el-col>
-                            <el-col span={9}>
-                                <el-button size="mini"
-                                    style="float: right"
-                                    on-click={() => this.setAll('img')}
-                                    type="success">确定</el-button>
-                            </el-col>
-                        </el-row>
-                        <span slot="reference" style="display: flex; justify-content:center">{column.label}<i class="el-icon-edit"></i></span>
-                    </el-popover>
-                ) */
                 return (
                     <el-popover placement="top-start" trigger="click">
                         <el-row>
@@ -612,12 +595,6 @@ export default {
         }
     },
     watch: {
-        chooseSku1(newV, oldV) {
-            this.skuInit && this.buildChild()
-        },
-        chooseSku2(newV, oldV) {
-            this.skuInit && this.buildChild()
-        },
     },
     components: {
         MDinput, tinymce
