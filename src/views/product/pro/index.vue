@@ -105,10 +105,12 @@
             </el-table-column>
             <el-table-column align="center"
                 label="库存"
+                width="80px"
                 prop="stock">
             </el-table-column>
             <el-table-column align="center"
                 label="销量"
+                width="80px"
                 prop="sales_volume">
             </el-table-column>
             <el-table-column align="center"
@@ -129,7 +131,7 @@
                         @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button size="mini"
                         type="danger"
-                        @click="handleDel(scope.row)">删除</el-button>
+                        @click="handleDel(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -148,7 +150,8 @@
 </template>
 
 <script>
-import { getGoods } from '@/api/goods'
+import { getGoods, delPro } from '@/api/product'
+import { mapMutations } from 'vuex'
 const cdn = process.env.CDN
 export default {
     name: "goods",
@@ -181,17 +184,22 @@ export default {
             return ''
         },
         //编辑商品,并把用户信息存储在VUEX,方便调用
-        handleEdit(index, info) {
-            this.$router.push('/admin/addAdmin')
+        handleEdit(info) {
+            info.imgs = info.imgs.split('|')
+            this.setPro(info)
+            this.$router.push('/product/editgoods')
         },
-        //删除用户
+        //删除商品
         handleDel(index, info) {
-            this.$confirm('删除管理员将不可恢复', '警告', {
+            this.$confirm('删除商品将不可恢复', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log(111)
+                console.log(info)
+                delPro({ id: info.id, type: 1 }).then(res => {
+                    this.list.splice(index, 1)
+                })
             })
         },
         //跳转到添加商品
@@ -220,11 +228,13 @@ export default {
                 this.pageSize = res.data.pro.per_page
                 this.page = res.data.pro.current_page
                 this.table_loading = false
-                this.$refs.tableRef.doLayout()
             }).catch(err => {
                 this.table_loading = true
             })
         },
+        ...mapMutations({
+            'setPro': 'SET_PRODUCT'
+        })
     },
 }
 </script>

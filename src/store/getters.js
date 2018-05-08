@@ -5,6 +5,7 @@ const getters = {
     name: state => state.user.name,
     roles: state => state.user.roles,
     editAdmin: state => state.user.editAdmin,
-    adminNode: state => state.user.node
+    adminNode: state => state.user.node,
+    pro: state => state.product.pro
 }
 export default getters

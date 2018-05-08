@@ -371,7 +371,7 @@ export default {
         handlePictureCardPreview(file) {
             console.log('handlePictureCardPreview', file)
             this.dialogVisible = true
-            this.dialogImageUrl = cdn + file.response.data
+            this.dialogImageUrl = file.url
         },
         //图片删除钩子
         handleRemove(file, fileList) {
@@ -557,6 +557,10 @@ export default {
     #add-pro
         .form-container
             padding: 10px 50px
+            .material-input
+                font-weight: 800
+                font-size: 23px
+                color: rgba(176, 195, 25, 0.8)
             #title-item
                 display: block
                 .el-form-item__content
