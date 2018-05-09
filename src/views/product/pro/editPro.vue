@@ -532,7 +532,6 @@ export default {
                 this.chooseSku2 = this.tempChooseSku2
                 return
             }
-            console.log(this.tempChooseSku1, attr)
             if (this.chooseSku1.length > 0 && this.chooseSku2.length == 0) {
                 this.tempLabel = { name: attr.name, sku_id_1: attr.id, sku_id_2: 0, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
                 const flag = inArray(this.chooseSku1, attr)
