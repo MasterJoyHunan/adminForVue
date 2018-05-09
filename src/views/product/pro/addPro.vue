@@ -35,41 +35,12 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8"
-                    v-if="formValue.sku.length == 0">
-                    <el-form-item label="市场价"
-                        prop="market_price">
-                        <el-input style="width: 200px"
-                            type="number"
-                            v-model.number="formValue.market_price"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8"
-                    v-if="formValue.sku.length == 0">
-                    <el-form-item label="售价"
-                        prop="price">
-                        <el-input style="width: 200px"
-                            type="number"
-                            v-model.number="formValue.price"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="8"
-                    v-if="formValue.sku.length == 0">
+                    v-if="!haveSku">
                     <el-form-item label="库存"
                         prop="stock">
                         <el-input style="width: 200px"
                             type="number"
                             v-model.number="formValue.stock"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8"
-                    v-if="formValue.sku.length == 0">
-                    <el-form-item label="售出"
-                        prop="sales_volume">
-                        <el-input style="width: 200px"
-                            type="number"
-                            v-model.number="formValue.sales_volume"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -81,11 +52,44 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+            <el-row>
+                <el-col :span="8"
+                    v-if="!haveSku">
+                    <el-form-item label="市场价"
+                        prop="market_price">
+                        <el-input style="width: 200px"
+                            type="number"
+                            v-model.number="formValue.market_price"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8"
+                    v-if="!haveSku">
+                    <el-form-item label="售价"
+                        prop="price">
+                        <el-input style="width: 200px"
+                            type="number"
+                            v-model.number="formValue.price"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8"
+                    v-if="!haveSku">
+                    <el-form-item label="售出"
+                        prop="sales_volume">
+                        <el-input style="width: 200px"
+                            type="number"
+                            v-model.number="formValue.sales_volume"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
             <el-row v-if="skuLabel.length > 0">
                 <el-col :span="24"
                     v-if="sku1List.length > 0"
                     style="padding-bottom: 22px">
-                    <span class="diver">选择商品属性1(可不选)</span>
+                    <span class="diver">选择商品属性1
+                        <div class="el-form-item__error"
+                            v-if="choose1Error">请继续选择属性2</div>
+                    </span>
                     <el-checkbox v-model="chooseSku1"
                         v-for="(le1, index) in sku1List"
                         :key="index"
@@ -95,7 +99,10 @@
                 <el-col :span="24"
                     v-if="sku2List.length > 0"
                     style="padding-bottom: 22px">
-                    <span class="diver">选择商品属性2(可不选)</span>
+                    <span class="diver">选择商品属性2
+                        <div class="el-form-item__error"
+                            v-if="choose2Error">请继续选择属性1</div>
+                    </span>
                     <el-checkbox v-model="chooseSku2"
                         v-for="(le2, index) in sku2List"
                         :key="index"
@@ -333,6 +340,7 @@ export default {
             imgPostUrl: api + '/common/uploadImg', //图片上传地址
             dialogImageUrl: '', //已完成上传, 加载图片预览地址
             dialogVisible: false, //加载图片预览地址flag
+            haveSku: false
         }
     },
     created() {
@@ -348,8 +356,11 @@ export default {
             this.cate.forEach((v, i) => {
                 if (v.id == tag) {
                     if (v.sku.length > 0) {
+                        this.haveSku = true
                         this.skuLabel = v.sku
                         this.setSku(v.sku)
+                    } else {
+                        this.haveSku = false
                     }
                 }
             })
@@ -408,6 +419,13 @@ export default {
                 if (!valid) {
                     this.$message({
                         message: '信息填写错误,请仔细检查',
+                        type: 'error'
+                    })
+                    return false
+                }
+                if (this.choose1Error || this.choose2Error) {
+                    this.$message({
+                        message: 'SKU选择出现错误!请仔细检查',
                         type: 'error'
                     })
                     return false
@@ -539,6 +557,31 @@ export default {
             }
         }
     },
+    computed: {
+        // 商品属性选择, 如果有两级属性, 则必须选择两个都选择才能提交
+        choose1Error() {
+            if (this.sku1List.length > 0 && this.sku2List.length == 0) {
+                return false
+            }
+            if (this.sku1List.length > 0 && this.sku2List.length > 0) {
+                if (this.chooseSku1.length > 0 && this.chooseSku2.length == 0) {
+                    return true
+                }
+                return false
+            }
+        },
+        choose2Error() {
+            if (this.sku1List.length == 0 && this.sku2List.length > 0) {
+                return false
+            }
+            if (this.sku1List.length > 0 && this.sku2List.length > 0) {
+                if (this.chooseSku1.length == 0 && this.chooseSku2.length > 0) {
+                    return true
+                }
+                return false
+            }
+        }
+    },
     watch: {
         chooseSku1(newV, oldV) {
             this.buildChild()
@@ -572,6 +615,12 @@ export default {
                 line-height: 40px
                 margin-bottom: 22px
                 border-bottom: 1px dashed #ccc
+                .el-form-item__error
+                    position: relative
+                    padding-top: 0
+                    top: auto
+                    left: 10px
+                    display: inline-block
             .editor-container 
                 min-height: 500px
                 margin: 0 0 30px

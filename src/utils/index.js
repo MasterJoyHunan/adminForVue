@@ -60,7 +60,32 @@ export function formatTime(time, option) {
 export function inArray(arr, obj) {
     let i = arr.length
     while (i--) {
-        if (arr[i] === obj) {
+        if (arr[i] == obj) {
+            return i
+        }
+    }
+    return false
+}
+
+export function inArrayObject(arr, obj) {
+    let i = arr.length
+    while (i--) {
+        const aProps = Object.keys(arr[i])
+        const bProps = Object.keys(obj)
+        if (aProps.length != bProps.length) {
+            continue
+        }
+        var flag = true
+        for (var j = 0; j < aProps.length; j++) {
+            const propName = aProps[j]
+            // If values of same property are not equal,
+            // objects are not equivalent
+            if (arr[i][propName] != obj[propName]) {
+                flag = false
+                break
+            }
+        }
+        if (flag) {
             return i
         }
     }

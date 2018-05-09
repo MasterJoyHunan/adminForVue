@@ -36,6 +36,25 @@
                 </el-col>
                 <el-col :span="8"
                     v-if="formValue.sku.length == 0">
+                    <el-form-item label="库存"
+                        prop="stock">
+                        <el-input style="width: 200px"
+                            type="number"
+                            v-model.number="formValue.stock"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="排序"
+                        prop="sort">
+                        <el-input style="width: 200px"
+                            type="number"
+                            v-model.number="formValue.sort"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8"
+                    v-if="formValue.sku.length == 0">
                     <el-form-item label="市场价"
                         prop="market_price">
                         <el-input style="width: 200px"
@@ -52,17 +71,6 @@
                             v-model.number="formValue.price"></el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="8"
-                    v-if="formValue.sku.length == 0">
-                    <el-form-item label="库存"
-                        prop="stock">
-                        <el-input style="width: 200px"
-                            type="number"
-                            v-model.number="formValue.stock"></el-input>
-                    </el-form-item>
-                </el-col>
                 <el-col :span="8"
                     v-if="formValue.sku.length == 0">
                     <el-form-item label="售出"
@@ -72,14 +80,7 @@
                             v-model.number="formValue.sales_volume"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                    <el-form-item label="排序"
-                        prop="sort">
-                        <el-input style="width: 200px"
-                            type="number"
-                            v-model.number="formValue.sort"></el-input>
-                    </el-form-item>
-                </el-col>
+
             </el-row>
             <el-row v-if="skuLabel.length > 0">
                 <el-col :span="24"
@@ -90,7 +91,8 @@
                         v-for="(le1, index) in sku1List"
                         :key="index"
                         :label="le1"
-                        @change="chooseCate"
+                        :disabled="inArray(tempChooseSku1, le1)"
+                        @change="buildChild(le1, 1)"
                         border>{{le1.name}}</el-checkbox>
                 </el-col>
                 <el-col :span="24"
@@ -101,7 +103,8 @@
                         v-for="(le2, index) in sku2List"
                         :key="index"
                         :label="le2"
-                        @change="chooseCate"
+                        :disabled="inArray(tempChooseSku2, le2)"
+                        @change="buildChild(le2, 2)"
                         border>{{le2.name}}</el-checkbox>
                 </el-col>
             </el-row>
@@ -263,11 +266,10 @@
 
 <script>
 import MDinput from "@/components/MDinput"
-import { inArray } from "@/utils/index"
+import { inArray, inArrayObject } from "@/utils/index"
 import tinymce from "@/components/Tinymce"
 import { getCate, editPro, delPro } from "@/api/product"
 import { mapGetters } from 'vuex'
-// const merge = require('webpack-merge')
 const api = process.env.BASE_API
 const cdn = process.env.CDN
 export default {
@@ -298,10 +300,10 @@ export default {
                     { required: true, message: '请选择分类', trigger: 'blur', type: 'number' },
                 ],
                 market_price: [
-                    { required: true, min: 0.01, message: '市场价不得低于0.01元', trigger: 'blur', type: 'number' }
+                    { required: true, min: 0.01, message: '市场价不得低于0.01元', trigger: 'blur' }
                 ],
                 price: [
-                    { required: true, min: 0.01, message: '售价不得低于0.01元', trigger: 'blur', type: 'number' }
+                    { required: true, min: 0.01, message: '售价不得低于0.01元', trigger: 'blur' }
                 ],
                 stock: [
                     { required: true, min: 1, message: '库存不能低于1个', trigger: 'blur', type: 'number' }
@@ -339,12 +341,16 @@ export default {
             dialogImageUrl: '', //已完成上传, 加载图片预览地址
             dialogVisible: false, //加载图片预览地址flag
             fileList: [],
+            tempLabel: {}
         }
     },
     computed: {
         ...mapGetters(['pro'])
     },
     created() {
+        // 临时数组存储修改商品的SKU信息, 不需要set get
+        this.tempChooseSku1 = []
+        this.tempChooseSku2 = []
         if (Object.keys(this.pro).length == 0) {
             this.$router.push('/product/goods')
         }
@@ -374,6 +380,7 @@ export default {
                     attr1_id.forEach(i => {
                         this.skuLabel.forEach((v) => {
                             if (v.id == i) {
+                                this.tempChooseSku1.push(v)
                                 this.chooseSku1.push(v)
                             }
                         })
@@ -383,6 +390,7 @@ export default {
                     attr2_id.forEach(i => {
                         this.skuLabel.forEach((v) => {
                             if (v.id == i) {
+                                this.tempChooseSku2.push(v)
                                 this.chooseSku2.push(v)
                             }
                         })
@@ -397,7 +405,6 @@ export default {
             Object.keys(this.pro).map(index => {
                 // 基础没学好,如果赋值数组会直接爆炸
                 if (index == 'sku' && this.pro.sku.length > 0) {
-                    // this.formValue.sku = this.pro.sku.concat([])
                     this.pro.sku.forEach(i => {
                         const j = {}
                         Object.keys(i).map(iv => {
@@ -409,8 +416,6 @@ export default {
                     this.formValue[index] = this.pro[index]
                 }
             })
-
-            // this.formValue = merge(this.pro, this.formValue)
             // 渲染上传图片
             this.pro.imgs.map(item => {
                 this.fileList.push({ url: cdn + item })
@@ -418,9 +423,13 @@ export default {
         })
     },
     methods: {
-        // 选择分类设置的SKU
-        chooseCate(tag) {
-            console.log(tag)
+        // 如果是已经选择的,无法取消
+        inArray(arr, attr) {
+            if (inArray(arr, attr) !== false) {
+                return true
+            } else {
+                return false
+            }
         },
         // 选择sku
         setSku(sku) {
@@ -459,7 +468,13 @@ export default {
         },
         //删除SKU
         deleteSku(index, row) {
-            this.$confirm('删除将不可恢复, 确定?', '警告', {
+            if (!row.id) {
+                // 临时添加的可直接删除
+                this.formValue.sku.splice(index, 1)
+                return
+            }
+            // 已保存到数据库的需要确认
+            this.$confirm('已保存的SKU删除将不可恢复, 确定?', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -498,23 +513,94 @@ export default {
                 })
             })
         },
-        // 添加新的SKU属性, 笛卡尔积
-        buildChild() {
-            this.formValue.sku = []
+        // 添加新的SKU属性, 笛卡尔积, 如果已经存在的,不改变
+        buildChild(attr, pos) {
+            // 需要判断,不能为已经选择的SKU
+            if (inArray(this.tempChooseSku1, attr) !== false) {
+                this.$message({
+                    message: '请不要操作已选择的SKU',
+                    type: 'error'
+                })
+                this.chooseSku1 = this.tempChooseSku1
+                return
+            }
+            if (inArray(this.tempChooseSku2, attr) !== false) {
+                this.$message({
+                    message: '请不要操作已选择的SKU',
+                    type: 'error'
+                })
+                this.chooseSku2 = this.tempChooseSku2
+                return
+            }
+            console.log(this.tempChooseSku1, attr)
             if (this.chooseSku1.length > 0 && this.chooseSku2.length == 0) {
-                this.chooseSku1.forEach((item, index) => {
-                    this.formValue.sku.push({ name: item.name, sku_id_1: item.id, sku_id_2: 0, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' })
-                })
+                this.tempLabel = { name: attr.name, sku_id_1: attr.id, sku_id_2: 0, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
+                const flag = inArray(this.chooseSku1, attr)
+                if (flag !== false) {
+                    //添加
+                    this.formValue.sku.push(this.tempLabel)
+                } else {
+                    //删除
+                    const index = inArrayObject(this.formValue.sku, this.tempLabel)
+                    if (index !== false) {
+                        this.formValue.sku.splice(index, 1)
+                    }
+                }
             } else if (this.chooseSku1.length > 0 && this.chooseSku2.length > 0) {
-                this.chooseSku1.forEach((item, index) => {
-                    this.chooseSku2.forEach((item2, index2) => {
-                        this.formValue.sku.push({ name: item.name + item2.name, sku_id_1: item.id, sku_id_2: item2.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' })
-                    })
-                })
+                // 多重数据的添加
+                // 1.选择的sku1
+                if (pos == 1) {
+                    // 2.判断是选择还是取消
+                    const flag = inArray(this.chooseSku1, attr)
+                    if (flag !== false) {
+                        // 3.如果添加
+                        this.chooseSku2.forEach((item, index) => {
+                            this.tempLabel = { name: attr.name + item.name, sku_id_1: attr.id, sku_id_2: item.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
+                            this.formValue.sku.push(this.tempLabel)
+                        })
+                    } else {
+                        // 3.如果取消
+                        this.chooseSku2.forEach((item, index) => {
+                            this.tempLabel = { name: attr.name + item.name, sku_id_1: attr.id, sku_id_2: item.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
+                            const index1 = inArrayObject(this.formValue.sku, this.tempLabel)
+                            if (index1 !== false) {
+                                this.formValue.sku.splice(index1, 1)
+                            }
+                        })
+                    }
+                } else {
+                    // 选择的sku2
+                    const flag = inArray(this.chooseSku2, attr)
+                    if (flag !== false) {
+                        // 3.如果添加
+                        this.chooseSku1.forEach((item, index) => {
+                            this.tempLabel = { name: item.name + attr.name, sku_id_1: item.id, sku_id_2: attr.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
+                            this.formValue.sku.push(this.tempLabel)
+                        })
+                    } else {
+                        // 3.如果取消
+                        this.chooseSku1.forEach((item, index) => {
+                            this.tempLabel = { name: item.name + attr.name, sku_id_1: item.id, sku_id_2: attr.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
+                            const index1 = inArrayObject(this.formValue.sku, this.tempLabel)
+                            if (index1 !== false) {
+                                this.formValue.sku.splice(index1, 1)
+                            }
+                        })
+                    }
+                }
             } else if (this.chooseSku1.length == 0 && this.chooseSku2.length > 0) {
-                this.chooseSku2.forEach((item, index) => {
-                    this.formValue.sku.push({ name: item.name, sku_id_1: 0, sku_id_2: item.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' })
-                })
+                this.tempLabel = { name: attr.name, sku_id_1: 0, sku_id_2: attr.id, stock: 0, market_price: 0, price: 0, sales_volume: 0, img: '' }
+                const flag = inArray(this.chooseSku2, attr)
+                if (flag !== false) {
+                    //添加
+                    this.formValue.sku.push(this.tempLabel)
+                } else {
+                    //删除
+                    const index = inArrayObject(this.formValue.sku, this.tempLabel)
+                    if (index !== false) {
+                        this.formValue.sku.splice(index, 1)
+                    }
+                }
             }
         },
         //重写头部
@@ -645,3 +731,4 @@ export default {
                     -webkit-text-fill-color: #409EFF
                     fill: #409EFF
 </style>
+
