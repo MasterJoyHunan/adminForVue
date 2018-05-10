@@ -15,3 +15,20 @@ export function getOrderDetail(params) {
         params
     })
 }
+
+export function sendGoods(data) {
+    return request({
+        url: "order/sendGoods",
+        method: "post",
+        data
+    })
+}
+
+export function selfPickedUp(data) {
+    return request({
+        url: "order/selfPickedUp",
+        method: "post",
+        data
+    })
+}
+
