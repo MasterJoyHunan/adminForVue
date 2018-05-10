@@ -177,24 +177,16 @@
 
 <script>
 import { getCate, addCate, editCate, delCate, addCateAttr, delCateAttr } from '@/api/cate'
-
+import { pageMixin } from '@/utils/mixin'
 export default {
     name: "product-cate",
-    created() {
-        this._getData()
-    },
+    mixins: [pageMixin],
     data() {
         return {
-            table_loading: true,
             showDialog: false,
-            list: [],
             params: {
                 name: '',
-                pageSize: 10, //	每页显示条目个数
-                page: 1, //前页数
             },
-            page_sizes: [10, 25, 50, 100],
-            total: 1,   //总共多少页
             form: {
                 name: '',
                 sort: 1,
@@ -298,21 +290,6 @@ export default {
             delCateAttr({ id: id }).then(res => {
                 attr == 1 ? row.attr1.splice(index, 1) : row.attr2.splice(index, 1)
             })
-        },
-
-        //搜索
-        search() {
-            this.table_loading = true
-            this._getData()
-        },
-        //修改每页显示多少条数据
-        handleSizeChange(val) {
-            this.params.pageSize = val
-            this._getData()
-        },
-        //跳转页面
-        handleCurrentChange(val) {
-            this._getData()
         },
         //获取数据
         _getData() {

@@ -124,6 +124,7 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
+                width="170px"
                 label="操作">
                 <template slot-scope="scope">
                     <el-button size="mini"
@@ -152,29 +153,19 @@
 <script>
 import { getGoods, delPro } from '@/api/product'
 import { mapMutations } from 'vuex'
-const cdn = process.env.CDN
+import { pageMixin } from '@/utils/mixin'
 export default {
     name: "goods",
-    created() {
-        this._getData()
-    },
+    mixins: [pageMixin],
     data() {
         return {
-            cdn: cdn,
-            table_loading: true,
-            list: [],
             cate: [],
             params: {
                 title: '',
                 cate_id: '',
-                pageSize: 10, //	每页显示条目个数
-                page: 1, //前页数
             },
-            page_sizes: [10, 25, 50, 100],
-            total: 1   //总共多少页
         }
     },
-
     methods: {
         // 给不需要展开的行添加一个类
         getRowClass({ row }) {
@@ -206,19 +197,7 @@ export default {
         addGoods() {
             this.$router.push('/product/addgoods')
         },
-        //搜索
-        search() {
-            this._getData()
-        },
-        //修改每页显示多少条数据
-        handleSizeChange(val) {
-            this.params.pageSize = val
-            this._getData()
-        },
-        //跳转页面
-        handleCurrentChange(val) {
-            this._getData()
-        },
+
         //获取数据
         _getData() {
             getGoods(this.params).then(res => {
@@ -243,9 +222,6 @@ export default {
 #product-index
     .search-container
         margin-bottom: 10px
-    .page-container
-        float: right
-        margin: 20px
     .hide-expand
         .el-table__expand-column
             .cell

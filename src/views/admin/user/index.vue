@@ -86,22 +86,15 @@
 <script>
 import { getAdminList, delAdmin } from '@/api/adminUser'
 import { mapMutations } from 'vuex'
+import { pageMixin } from '@/utils/mixin'
 export default {
     name: "userIndex",
-    created() {
-        this._getData()
-    },
+    mixins: [pageMixin],
     data() {
         return {
-            table_loading: true,
-            list: [],
             params: {
                 user_name: '',
-                pageSize: 10, //	每页显示条目个数
-                page: 1, //前页数
             },
-            page_sizes: [10, 25, 50, 100],
-            total: 1   //总共多少页
         }
     },
 
@@ -132,19 +125,6 @@ export default {
             this.$router.push('/admin/addAdmin/')
             this.setEditAdmin({})
         },
-        //搜索
-        search() {
-            this._getData()
-        },
-        //修改每页显示多少条数据
-        handleSizeChange(val) {
-            this.params.pageSize = val
-            this._getData()
-        },
-        //跳转页面
-        handleCurrentChange(val) {
-            this._getData()
-        },
         //获取数据
         _getData() {
             getAdminList(this.params).then(res => {
@@ -168,9 +148,5 @@ export default {
 <style scoped>
 .search-container {
   margin-bottom: 10px;
-}
-.page-container {
-  float: right;
-  margin: 20px;
 }
 </style>
