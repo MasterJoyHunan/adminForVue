@@ -1,6 +1,6 @@
 <template>
     <div class="app-container"
-        id="add-pro">
+        id="edit-pro">
         <el-form class="form-container"
             :inline="true"
             status-icon
@@ -688,7 +688,7 @@ export default {
 </script>
 
 <style lang="sass">
-    #add-pro
+    #edit-pro
         .form-container
             padding: 10px 50px
             .material-input

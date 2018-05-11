@@ -82,12 +82,14 @@
             width="30%">
             <el-form status-icon
                 label-width="120px"
+                :model="expressInfo"
                 :rules="formRule"
-                ref="cateForm"
+                ref="expressForm"
                 @submit.native.prevent>
                 <el-form-item label="快递公司"
                     prop="express">
-                    <el-select v-model="expressInfo.express">
+                    <el-select v-model="expressInfo.express"
+                        style="width: 100%">
                         <el-option v-for="(item, index) in expressList"
                             :key="index"
                             :value="item"
@@ -163,16 +165,22 @@ export default {
         },
         // 提交填写的快递信息
         onSubmit() {
-            this.expressInfo.id = this.$route.query.id
-            sendGoods(this.expressInfo).then(res => {
-                this.$message({
-                    message: res.msg,
-                    type: 'success'
+            console.log(this.expressInfo)
+            this.$refs.expressForm.validate(valid => {
+                if (!valid) {
+                    return false
+                }
+                this.expressInfo.id = this.$route.query.id
+                sendGoods(this.expressInfo).then(res => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                    this.showDialog = false
+                    this.order.status = 2
+                    this.order.express = this.expressInfo.express
+                    this.order.express_no = this.expressInfo.express_no
                 })
-                this.showDialog = false
-                this.order.status = 2
-                this.order.express = this.expressInfo.express
-                this.order.express_no = this.expressInfo.express_no
             })
         },
         // 获取数据
@@ -191,7 +199,7 @@ export default {
 <style lang="scss" scoped>
 #order-detail {
     .order-left {
-        // background-color: #ddd;
+        color: #952700;
     }
     .order-right {
         color: #ddd;
