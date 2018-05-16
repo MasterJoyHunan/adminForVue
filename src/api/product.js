@@ -36,3 +36,11 @@ export function delPro(params) {
         data: params
     })
 }
+
+export function getPro(params) {
+    return request({
+        url: '/product/getProdetail',
+        method: 'get',
+        params
+    })
+}

@@ -176,9 +176,9 @@ export default {
         },
         //编辑商品,并把用户信息存储在VUEX,方便调用
         handleEdit(info) {
-            info.imgs = info.imgs.split('|')
-            this.setPro(info)
-            this.$router.push('/product/editgoods')
+            // info.imgs = info.imgs.split('|')
+            // this.setPro(info)
+            this.$router.push({path: '/product/editgoods', query: {id: info.id}})
         },
         //删除商品
         handleDel(index, info) {

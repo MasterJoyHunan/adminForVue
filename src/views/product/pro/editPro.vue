@@ -218,6 +218,7 @@
                                         type="primary">选取文件</el-button>
                                     <img :src="cdn + scope.row.img"
                                         class="upload-img"
+                                        @click="skuImgUpload(scope.$index)"
                                         v-else
                                         slot="trigger"
                                         alt="">
@@ -268,8 +269,7 @@
 import MDinput from "@/components/MDinput"
 import { inArray, inArrayObject } from "@/utils/index"
 import tinymce from "@/components/Tinymce"
-import { getCate, editPro, delPro } from "@/api/product"
-import { mapGetters } from 'vuex'
+import { getCate, editPro, delPro, getPro } from "@/api/product"
 const api = process.env.BASE_API
 const cdn = process.env.CDN
 export default {
@@ -344,83 +344,11 @@ export default {
             tempLabel: {}
         }
     },
-    computed: {
-        ...mapGetters(['pro'])
-    },
     created() {
         // 临时数组存储修改商品的SKU信息, 不需要set get
         this.tempChooseSku1 = []
         this.tempChooseSku2 = []
-        if (Object.keys(this.pro).length == 0) {
-            this.$router.push('/product/goods')
-        }
-        getCate().then(res => {
-            this.cate = res.data
-            // 渲染SKU_LABEL
-            if (this.pro.sku.length > 0) {
-                this.cate.forEach((v, i) => {
-                    if (v.id == this.pro.cate_id) {
-                        if (v.sku.length > 0) {
-                            this.skuLabel = v.sku
-                            this.setSku(v.sku)
-                        }
-                    }
-                })
-                const attr1_id = []
-                const attr2_id = []
-                this.pro.sku.forEach(item => {
-                    if (item.sku_id_1 > 0) {
-                        !attr1_id[item.sku_id_1] ? attr1_id[item.sku_id_1] = item.sku_id_1 : ''
-                    }
-                    if (item.sku_id_2 > 0) {
-                        !attr2_id[item.sku_id_2] ? attr2_id[item.sku_id_2] = item.sku_id_2 : ''
-                    }
-                })
-                if (attr1_id.length > 0) {
-                    attr1_id.forEach(i => {
-                        this.skuLabel.forEach((v) => {
-                            if (v.id == i) {
-                                this.tempChooseSku1.push(v)
-                                this.chooseSku1.push(v)
-                            }
-                        })
-                    })
-                }
-                if (attr2_id.length > 0) {
-                    attr2_id.forEach(i => {
-                        this.skuLabel.forEach((v) => {
-                            if (v.id == i) {
-                                this.tempChooseSku2.push(v)
-                                this.chooseSku2.push(v)
-                            }
-                        })
-                    })
-                }
-            }
-        })
-    },
-    mounted() {
-        this.$nextTick(() => {
-            // 渲染数据
-            Object.keys(this.pro).map(index => {
-                // 基础没学好,如果赋值数组会直接爆炸
-                if (index == 'sku' && this.pro.sku.length > 0) {
-                    this.pro.sku.forEach(i => {
-                        const j = {}
-                        Object.keys(i).map(iv => {
-                            j[iv] = i[iv]
-                        })
-                        this.formValue.sku.push(j)
-                    })
-                } else {
-                    this.formValue[index] = this.pro[index]
-                }
-            })
-            // 渲染上传图片
-            this.pro.imgs.map(item => {
-                this.fileList.push({ url: cdn + item })
-            })
-        })
+        this._getData()
     },
     methods: {
         // 如果是已经选择的,无法取消
@@ -453,7 +381,9 @@ export default {
         },
         //图片删除钩子
         handleRemove(file, fileList) {
-            this.formValue.imgs.splice(inArray(this.formValue.imgs, file.response.data), 1)
+            console.log(this.formValue)
+            const item = file.imgName || file.response.data
+            this.formValue.imgs.splice(inArray(this.formValue.imgs, item), 1)
             console.log('handleRemove', file, fileList)
         },
         //图片上传钩子
@@ -486,6 +416,7 @@ export default {
         },
         //SKU图片上传之前的操作
         skuImgUpload(index) {
+            console.log(this.formValue.sku)
             this.tempIdenx = index
         },
         //SKU图片上传
@@ -504,6 +435,7 @@ export default {
                     })
                     return false
                 }
+                console.log(this.formValue)
                 editPro(this.formValue).then(res => {
                     this.$message({
                         message: res.msg,
@@ -677,7 +609,63 @@ export default {
             if (res.status == 1) {
                 this.skuAttr.img = res.data
             }
-        }
+        },
+        _getData() {
+            getPro(this.$route.query).then(res => {
+                this.formValue = res.data
+                getCate().then(res => {
+                    this.cate = res.data
+                    // 渲染SKU_LABEL
+                    if (this.formValue.sku.length > 0) {
+                        this.cate.forEach((v, i) => {
+                            if (v.id == this.formValue.cate_id) {
+                                if (v.sku.length > 0) {
+                                    this.skuLabel = v.sku
+                                    this.setSku(v.sku)
+                                }
+                            }
+                        })
+                        const attr1_id = []
+                        const attr2_id = []
+                        this.formValue.sku.forEach(item => {
+                            if (item.sku_id_1 > 0) {
+                                !attr1_id[item.sku_id_1] ? attr1_id[item.sku_id_1] = item.sku_id_1 : ''
+                            }
+                            if (item.sku_id_2 > 0) {
+                                !attr2_id[item.sku_id_2] ? attr2_id[item.sku_id_2] = item.sku_id_2 : ''
+                            }
+                        })
+                        if (attr1_id.length > 0) {
+                            attr1_id.forEach(i => {
+                                this.skuLabel.forEach((v) => {
+                                    if (v.id == i) {
+                                        this.tempChooseSku1.push(v)
+                                        this.chooseSku1.push(v)
+                                    }
+                                })
+                            })
+                        }
+                        if (attr2_id.length > 0) {
+                            attr2_id.forEach(i => {
+                                this.skuLabel.forEach((v) => {
+                                    if (v.id == i) {
+                                        this.tempChooseSku2.push(v)
+                                        this.chooseSku2.push(v)
+                                    }
+                                })
+                            })
+                        }
+                    }
+                    //图片处理
+                    this.formValue.imgs = this.formValue.imgs.split('|')
+                    this.formValue.imgs.map(item => {
+                        this.fileList.push({ url: cdn + item, imgName: item })
+                    })
+                })
+            }).catch(err => {
+                this.$router.back()
+            })
+        },
     },
     watch: {
     },
