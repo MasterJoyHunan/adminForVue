@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <p style="border-bottom: 1px solid #000; padding: 10px;">商品分类列表</p>
+        <p class="page-title">商品分类列表</p>
         <div class="filter-container">
             <el-button type="primary"
                 plain

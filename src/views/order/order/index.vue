@@ -1,6 +1,7 @@
 <template>
     <div class="app-container"
         id="order">
+        <p class="page-title">订单列表</p>
         <el-table v-loading="table_loading"
             ref="tableRef"
             element-loading-text="加载中..."
@@ -95,25 +96,22 @@
 import { getTotal } from '@/api/order'
 import { pageMixin } from '@/utils/mixin'
 export default {
-    mixins: [pageMixin],
     name: "order-list",
+    mixins: [pageMixin],
     data() {
         return {
-            params: {
-            }
         }
     },
     methods: {
         handleGetDetail(info) {
-            console.log(info)
             this.$router.push({ path: '/order/detail', query: { id: info.id } })
         },
         _getData() {
-            getTotal().then(res => {
+            getTotal(this.params).then(res => {
                 this.list = res.data.data
-                this.total = res.data.total
-                this.params.pageSize = res.data.per_page
-                this.params.page = res.data.current_page
+                this.total = parseInt(res.data.total)
+                this.params.pageSize = parseInt(res.data.per_page)
+                this.params.page = parseInt(res.data.current_page)
                 this.table_loading = false
             }).catch(err => {
                 this.table_loading = false

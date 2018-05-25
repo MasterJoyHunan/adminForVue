@@ -1,7 +1,7 @@
 <template>
     <div class="app-container"
         id="express">
-        <p style="border-bottom: 1px solid #000; padding: 10px;">快递公司列表</p>
+        <p class="page-title">快递公司列表</p>
         <div class="filter-container">
             <el-button type="primary"
                 plain

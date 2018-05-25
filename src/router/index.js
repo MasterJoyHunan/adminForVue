@@ -159,6 +159,28 @@ export const constantRouterMap = [
             }
         ]
     },
+    {
+        path: "/recommend",
+        name: "recommend",
+        component: Layout,
+        alwaysShow: true,
+        redirect: "/recommend/index",
+        meta: { title: "推荐管理", icon: "recommend" },
+        children: [
+            {
+                path: "index",
+                name: "recommend-list",
+                component: () => import("@/views/recommend/postion/index"),
+                meta: { title: "推荐位置管理" }
+            },
+            {
+                path: "content",
+                name: "recommend-content",
+                component: () => import("@/views/recommend/content/index"),
+                meta: { title: "推荐内容管理" }
+            }
+        ]
+    },
     { path: "*", redirect: "/404", hidden: true }
 ]
 

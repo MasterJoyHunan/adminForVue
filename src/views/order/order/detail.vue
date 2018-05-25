@@ -2,18 +2,46 @@
     <div class="app-container"
         id="order-detail">
         <el-row>
-            <el-col :span="16"
+            <el-col :span="18"
                 class="order-left">
-                <el-steps :active="order.status + 2"
-                    align-center>
-                    <el-step title="取消订单"></el-step>
-                    <el-step title="等待支付"></el-step>
-                    <el-step title="等待发货"></el-step>
-                    <el-step title="等待收货"></el-step>
-                    <el-step title="完成订单"></el-step>
-                </el-steps>
+                <div class="box-container">
+                    <el-steps :active="order.status + 2"
+                        align-center>
+                        <el-step title="取消订单"></el-step>
+                        <el-step title="等待支付"></el-step>
+                        <el-step title="等待发货"></el-step>
+                        <el-step title="等待收货"></el-step>
+                        <el-step title="完成订单"></el-step>
+                    </el-steps>
+                    <div class="product">
+                        <p style="border-bottom: 1px dashed #ccc; padding: 10px; color: #ccc">商品列表</p>
+                        <div class="product-container">
+                            <div class="product-item"
+                                v-for="(pro, key) in order.info"
+                                :key="key">
+                                <div class="img"
+                                    :style="{'backgroundImage': `url(${getImg(pro)})`}">
+                                </div>
+                                <div class="text-container text-title">
+                                    <div class="title">{{pro.name}}</div>
+                                    <div class="sku"
+                                        v-if="pro.name_ext">
+                                        商品属性 : {{pro.name_ext}}</div>
+                                    <div class="sku"
+                                        v-else>&nbsp;</div>
+                                </div>
+                                <div class="text-container text-price">
+                                    <div class="price">
+                                        价格 : ¥{{pro.price}}</div>
+                                    <div class="num">
+                                        购买数量 : {{pro.num}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </el-col>
-            <el-col :span="8"
+            <el-col :span="6"
                 class="order-right">
                 <ul class="price">
                     <li>
@@ -117,6 +145,7 @@ export default {
     name: "order-list",
     data() {
         return {
+            cdn: process.env.CDN,
             order: {},
             expressList: [],
             expressInfo: {
@@ -165,7 +194,6 @@ export default {
         },
         // 提交填写的快递信息
         onSubmit() {
-            console.log(this.expressInfo)
             this.$refs.expressForm.validate(valid => {
                 if (!valid) {
                     return false
@@ -191,6 +219,9 @@ export default {
             }).catch(err => {
                 this.$router.back()
             })
+        },
+        getImg(item) {
+            return (this.cdn + item.img).replace(/\\/g, "/")
         }
     }
 }
@@ -199,13 +230,67 @@ export default {
 <style lang="scss" scoped>
 #order-detail {
     .order-left {
-        color: #952700;
+        .box-container {
+            padding: 50px;
+            margin: 0 70px 70px 70px;
+            box-shadow: 0 0 10px #000;
+            border-radius: 10px;
+            .product {
+                width: 100%;
+                padding: 0 5%;
+                .product-container {
+                    width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    .product-item {
+                        box-shadow: 0 0 3px #000;
+                        border-radius: 10px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        padding: 10px;
+                        margin-bottom: 10px;
+                        .img {
+                            border-radius: 10px;
+                            width: 150px;
+                            height: 150px;
+                            background-size: 100% 100%;
+                        }
+                        .text-container {
+                            height: 150px;
+                            padding-left: 20px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: flex-start;
+                            flex-direction: column;
+                            .title {
+                                overflow: hidden;
+                            }
+                            div {
+                                flex: 1;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                        }
+                        .text-price {
+                            width: 200px;
+                        }
+                        .text-title {
+                            flex: 1;
+                        }
+                    }
+                }
+            }
+        }
     }
     .order-right {
         color: #ddd;
         background-color: #161616;
         border-radius: 10px;
         padding: 30px;
+        box-shadow: 0 0 10px #000;
         ul {
             list-style: none;
             margin: 0;

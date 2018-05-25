@@ -1,72 +1,79 @@
-@import './variables.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
+@import "./variables.scss";
+@import "./mixin.scss";
+@import "./transition.scss";
+@import "./element-ui.scss";
+@import "./sidebar.scss";
 body {
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
 }
 
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 div:focus {
-    outline: none;
+  outline: none;
 }
 
 a:focus,
 a:active {
-    outline: none;
+  outline: none;
 }
 
 a,
 a:focus,
 a:hover {
-    cursor: pointer;
-    color: inherit;
-    text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
 }
 
 .clearfix {
-    &:after {
-        visibility: hidden;
-        display: block;
-        font-size: 0;
-        content: " ";
-        clear: both;
-        height: 0;
-    }
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
 }
 
 //main-container全局样式
 .app-main {
-    min-height: 100%
+  min-height: 100%;
 }
 
 .app-container {
-    padding: 20px;
+  padding: 20px;
 }
 
 .filter-container {
-    padding-bottom: 10px;
-    .filter-item {
-        display: inline-block;
-        vertical-align: middle;
-        margin-bottom: 10px;
-    }
+  padding-bottom: 10px;
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  }
 }
 
 .page-container {
-    float: right;
-    margin: 20px;
+  float: right;
+  margin: 20px;
+}
+
+.page-title {
+  color: #ccc;
+  border-bottom: 1px dashed #ccc;
+  padding: 10px;
 }

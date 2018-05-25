@@ -13,11 +13,11 @@ export const pageMixin = {
             list: [], // 数据
             params: {
                 pageSize: 10, // 每页显示条目个数
-                page: 1, // 当前页数
+                page: 1 // 当前页数
             },
             page_sizes: [10, 25, 50, 100], // 每页显示条目
             // page_sizes: [1, 2, 5, 10], // 每页显示条目
-            total: 1   // 总共多少页
+            total: 1 // 总共多少页
         }
     },
     methods: {
@@ -36,7 +36,7 @@ export const pageMixin = {
         },
         // 获取数据
         _getData() {
-            throw Error('请先获取数据')
+            throw Error("请先获取数据")
         }
     }
 }
