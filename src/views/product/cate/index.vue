@@ -79,8 +79,7 @@
                 width="60px">
             </el-table-column>
             <el-table-column align="center"
-                label="分类名"
-                width="240px">
+                label="分类名">
                 <template slot-scope="scope">
                     <el-input v-if="scope.row.edit"
                         class="edit-input"
@@ -103,10 +102,10 @@
             </el-table-column>
             <el-table-column align="center"
                 label="添加时间"
-                prop="add_time"
-                width="180px">
+                prop="add_time">
             </el-table-column>
             <el-table-column align="center"
+                width="400px"
                 label="操作">
                 <template slot-scope="scope">
                     <el-button v-if="scope.row.edit"
