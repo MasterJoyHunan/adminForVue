@@ -79,6 +79,22 @@ export const constantRouterMap = [
         ]
     },
     {
+        path: "/member",
+        name: "member",
+        component: Layout,
+        alwaysShow: true,
+        redirect: "/member/index",
+        meta: { title: "会员管理", icon: "member" },
+        children: [
+            {
+                path: "index",
+                name: "member-list",
+                component: () => import("@/views/member/index"),
+                meta: { title: "会员列表" }
+            }
+        ]
+    },
+    {
         path: "/system",
         name: "system",
         component: Layout,

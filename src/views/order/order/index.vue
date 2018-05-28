@@ -2,6 +2,29 @@
     <div class="app-container"
         id="order">
         <p class="page-title">订单列表</p>
+        <div class="filter-container">
+            <div style="float: right; display: flex">
+                <el-select v-model="params.status"
+                    style="width: 200px; margin: 0 3px"
+                    placeholder="选择订单状态">
+                    <el-option label="取消"
+                        value="-1"></el-option>
+                    <el-option label="待支付"
+                        value="0"></el-option>
+                    <el-option label="待发货"
+                        value="1"></el-option>
+                    <el-option label="待收货"
+                        value="2"></el-option>
+                    <el-option label="完成"
+                        value="3"></el-option>
+                </el-select>
+                <!-- <el-input v-model.number="params.tel"
+                    style="margin: 0 3px"></el-input> -->
+                <el-button type="primary"
+                    class="filter-item"
+                    @click="search()">搜索</el-button>
+            </div>
+        </div>
         <el-table v-loading="table_loading"
             ref="tableRef"
             element-loading-text="加载中..."
@@ -71,10 +94,11 @@
                         type="primary"
                         @click="handleGetDetail(scope.row)">详情
                     </el-button>
-                    <el-button size="mini"
+                    <!-- <el-button size="mini"
                         type="danger"
+                        v-if="scope.row.status == -1"
                         @click="handleDel(scope.$index, scope.row)">删除
-                    </el-button>
+                    </el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -100,11 +124,17 @@ export default {
     mixins: [pageMixin],
     data() {
         return {
+            params: {
+                status: '',
+            }
         }
     },
     methods: {
         handleGetDetail(info) {
             this.$router.push({ path: '/order/detail', query: { id: info.id } })
+        },
+        handleDel(index, row) {
+
         },
         _getData() {
             getTotal(this.params).then(res => {

@@ -6,6 +6,19 @@
                 plain
                 class="filter-item"
                 @click="handelAdd()">添加推荐内容</el-button>
+            <div style="float: right; display: flex">
+                <el-select v-model="params.cate_id"
+                    style="width: 200px; margin: 0 3px"
+                    placeholder="选择所属推荐位">
+                    <el-option v-for="(item, index) in cate"
+                        :label="item.name"
+                        :value="item.id"
+                        :key="index"></el-option>
+                </el-select>
+                <el-button type="primary"
+                    class="filter-item"
+                    @click="search()">搜索</el-button>
+            </div>
         </div>
         <el-table v-loading="table_loading"
             element-loading-text="加载中..."
@@ -33,8 +46,10 @@
             <el-table-column align="center"
                 prop="img"
                 label="图片">
-                <template  slot-scope="scope">
-                    <img :src="cdn + scope.row.img" class="scope-img" v-if="scope.row.img">
+                <template slot-scope="scope">
+                    <img :src="cdn + scope.row.img"
+                        class="scope-img"
+                        v-if="scope.row.img">
                 </template>
             </el-table-column>
             <el-table-column align="center"
@@ -139,12 +154,15 @@ import { getRecommendList, recommendContent, addRecommendContent, editRecommendC
 import { pageMixin } from '@/utils/mixin'
 const api = process.env.BASE_API
 export default {
-    name: "addRecommend-list",
+    name: "addRecommend-content",
     mixins: [pageMixin],
     data() {
         return {
             showDialog: false,
             cate: [],
+            params: {
+                cate_id: ''
+            },
             form: {
                 id: '',
                 name: '',
@@ -264,7 +282,7 @@ export default {
 .upload-img {
     width: 100%;
 }
-.scope-img{
+.scope-img {
     width: 53px;
 }
 </style>

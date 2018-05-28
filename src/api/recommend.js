@@ -36,7 +36,7 @@ export function recommendContent(params) {
     return request({
         url: "Recommend/content",
         method: "get",
-        data: params
+        params
     })
 }
 
