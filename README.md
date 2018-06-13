@@ -5,9 +5,9 @@
 * 作者一直都是把github当U盘用, 所以请不要在意master分支提交那么多次
 
 # 项目地址
-* [商城前台-Mobil版 演示地址](www.masterjoy.top)
+* [商城前台-Mobil版 演示地址](http://www.masterjoy.top)
 * [商城前台-Mobil版 github](https://github.com/MasterJoyHunan/app)
-* [商城后台-PC版 演示地址](www.masterjoy.top/root)
+* [商城后台-PC版 演示地址](http://www.masterjoy.top/root)
 * [商城后台-PC版 github](https://github.com/MasterJoyHunan/adminForVue)
 * [商城后台 php源码 github](https://github.com/MasterJoyHunan/shopAdmin)
 
