@@ -9,13 +9,13 @@ export function getGoods(params) {
 
 export function getCate() {
     return request({
-        url: '/product/addPro',
+        url: 'product/addPro',
     })
 }
 
 export function addPro(params) {
     return request({
-        url: '/product/addPro',
+        url: 'product/addPro',
         method: 'post',
         data: params
     })
@@ -23,7 +23,7 @@ export function addPro(params) {
 
 export function editPro(params) {
     return request({
-        url: '/product/editPro',
+        url: 'product/editPro',
         method: 'post',
         data: params
     })
@@ -31,7 +31,7 @@ export function editPro(params) {
 
 export function delPro(params) {
     return request({
-        url: '/product/delPro',
+        url: 'product/delPro',
         method: 'post',
         data: params
     })
@@ -39,7 +39,7 @@ export function delPro(params) {
 
 export function getPro(params) {
     return request({
-        url: '/product/getProdetail',
+        url: 'product/getProdetail',
         method: 'get',
         params
     })
